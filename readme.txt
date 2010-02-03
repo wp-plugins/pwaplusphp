@@ -14,6 +14,8 @@ PWA+PHP allows you to display public and private (unlisted) Picasa albums within
 
 PWA+PHP's configuration options allow you to customize the look and feel of your albums, including thumbnail and image size, images per page and display language, without modifying any code. The included CSS file can also be tweaked to your liking for an exact match with your existing website.  The div-based layout is fluid and adjusts automatically to fit your theme.
 
+Check out [the demo](http://pwaplusphp.smccandl.net/pwademo.php) to see the code in action.
+
 == Installation ==
 
 1. Extract the archive within the `/wp-content/plugins/` directory
