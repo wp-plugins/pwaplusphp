@@ -10,7 +10,9 @@ PWA+PHP allows you to display public and private (unlisted) Picasa albums within
 
 == Description ==
 
-[PWA+PHP](http://pwaplusphp.smccandl.net) is a lightweight solution for displaying your private (unlisted) and public PicasaWeb Albums within Wordpress in your language using Fancybox, Shadowbox or Lightbox. The plugin provides a guided installer that helps you generate your gdata token and set display options for your albums. 
+[PWA+PHP](http://pwaplusphp.smccandl.net) is a lightweight solution for displaying your private (unlisted) and public Picasa Albums within Wordpress in your language using Fancybox, Shadowbox or Lightbox. The plugin provides a guided installer that helps you generate your gdata token and set display options for your albums. 
+
+PWA+PHP extends the capabilites of Picasa albums, allowing you to [group albums by keywords](http://code.google.com/p/pwaplusphp/wiki/Album_Filtering) in the title.  Using this capability, you can create several photo pages in WordPress and show different groups of albums on each page.  You can then password protect those pages so that certain people can only see certain albums.
 
 PWA+PHP's configuration options allow you to customize the look and feel of your albums, including thumbnail and image size, images per page and display language, without modifying any code. The included CSS file can also be tweaked to your liking for an exact match with your existing website.  The div-based layout is fluid and adjusts automatically to fit your theme.
 
@@ -55,7 +57,7 @@ See [our wiki](http://code.google.com/p/pwaplusphp/w/list)
 == Features ==
 
 * Embed all your public, private and unlisted Picasa web albums on any website
-* Group and filter albums using keywords in the album title
+* Group and filter albums [using keywords](http://code.google.com/p/pwaplusphp/wiki/Album_Filtering) in the album title
 * Uploaded images via email, web interface or desktop app and see them instantly
 * Display image totals for the entire gallery and by album
 * Install script guides setup and token generation for private albums

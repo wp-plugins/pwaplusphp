@@ -42,7 +42,7 @@ function doCurlExec($file) {
 
 }
 
-function dumpAlbumList() {
+function dumpAlbumList($FILTER) {
 
 $USE_LIGHTBOX="TRUE";
 $STANDALONE_MODE="TRUE";
@@ -72,7 +72,6 @@ require_once(dirname(__FILE__)."/lang/$SITE_LANGUAGE.php");
 #----------------------------------------------------------------------------
 # CONFIGURATION
 #----------------------------------------------------------------------------
-$FILTER = $_REQUEST['filter'];
 $OPEN=0;
 
 #----------------------------------------------------------------------------
@@ -538,9 +537,10 @@ function pwaplusphp_remove() {
 function pwaplusphp_shortcode( $atts, $content = null ) {
 
         extract(shortcode_atts(array("album" => 'NULL'), $atts));
+	extract(shortcode_atts(array("filter" => ''), $atts));
 
         if (($album == "NULL") && (!isset($_GET["album"]))) {
-                $out = dumpAlbumList();
+                $out = dumpAlbumList($filter);
                 return($out);
         } else {
 		if ($album != "NULL") {
