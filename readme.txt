@@ -24,7 +24,7 @@ Check out [the demo](http://pwaplusphp.smccandl.net/pwademo.php) to see the code
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Open the Settings section and click on PWA+PHP
 1. Complete the setup (token generation and options)
-1. Create a new page with contents `[pwaplusphp]` or `[pwaplusphp album="album_name"]` or `[pwaplusphp album="random_photo"]`
+1. Create a new page with contents `[pwaplusphp]` or `[pwaplusphp album="album_name"]` or `[pwaplusphp album="random_photo"]` or `[pwaplusphp filter="keyword]`
 1. Check out the [full guide](http://code.google.com/p/pwaplusphp/wiki/WordPressPluginHelp) and [report bugs](http://code.google.com/p/pwaplusphp/issues/entry?template=Defect%20report%20from%20user) as necessary.
 
 == Frequently Asked Questions ==
