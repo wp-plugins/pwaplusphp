@@ -46,10 +46,16 @@ See [our wiki](http://code.google.com/p/pwaplusphp/w/list)
 
 == Changelog ==
 
+= 0.3 =
+* Beta version - added filter functionality to shortcode
+
 = 0.2 =
 * Alpha version - initial release.
 
 == Upgrade Notice ==
+
+= 0.3 =
+* Upgrade to use filter in shortcode
 
 = 0.2 =
 * Initial release.
