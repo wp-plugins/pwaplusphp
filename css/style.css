@@ -1,0 +1,47 @@
+body 	{ font-family: Verdana,Helvetica,Arial; }
+h2 	{ padding: 0px; margin: 0px;}
+a       { text-decoration: none; color: #000;}
+a:hover { text-decoration: none; }
+.pwaimg	{ padding: 5px; margin: 0px; background: #f1f1f1; border-style: solid; border-width: 1px; border-color: #CCC; }
+p	{ padding: 0px; margin: 0px; }
+
+#pages {
+	padding-top:   	20px;
+	padding-bottom:	10px;
+	width: 		100%;
+	float: 		right;
+	font-size:	12px;
+}
+
+#title {
+
+	width: 		100%; 
+	margin: 	20px 0px 10px 5px;
+
+}
+
+#pwafooter {
+
+	float:		right;
+	text-align:	center;
+        width:          100%;
+        margin:         10px 0px 10px 0px;
+	font-size:	10px;
+	color:		#C0C0C0;
+	font-style:	italic;
+
+}
+
+#pwafooter a { color: #C0C0C0; }
+.current_page 	{ font-weight: bold; }
+.back_to_list 	{ padding: 0px; margin: 0px; font-style: italic; font-size: 11px; color: #5c5c5c; }
+.titlepg	{ font-size: 13px; color: #808080; padding: 3px 0px 0px 2px; margin: 0px; }
+.overlaypg      { font-size: 13px; color: #000; padding: 3px 0px 0px 2px; margin: 0px; }
+.titlestats	{ font-size: 11px; color: #808080; padding: 0px 0px 10px 2px; margin: 0px; font-style: italic;}
+.overlaystats     { font-size: 11px; color: #808080; padding: 5px 0px 0px 2px; margin: 0px; font-style: italic;}
+.thumbnail 	{ float: left; padding: 5px; }
+
+a.overlay{position:relative;display:block;width:151px;height:151px;margin-bottom:25px;text-decoration:none;font-family:Verdana,Helvetica,Arial;color:#000}
+a.overlay:hover{background:#FFF;}
+a.overlay span{display:none;}
+a.overlay:hover span{display:block;color:#000;position:absolute;top:0;left:0;width:151px;height:151px;padding:10px;background:#FFF;z-index:999;cursor:pointer;opacity: 0.80; filter:alpha(opacity=80);}
