@@ -459,7 +459,7 @@ foreach ($vals as $val) {
                         $out .= "<p>";
                         $out .= "<div class='exif' style='width: $THUMBSIZE" . "px" . ">$short_caption</div>";
                         if ($PERMIT_IMG_DOWNLOAD == "TRUE") {
-                                $out .= "<div class='dlimg'><a href='$orig_href'><img border=0 style='padding-left: 10px;' src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' /></a></div>";
+                                $out .= "<div class='dlimg'><a alt='Save $filename' title='Save $filename' href='$orig_href'><img border=0 style='padding-left: 10px;' src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' /></a></div>";
                         }
                         $out .= "</p>";
                 } else {
