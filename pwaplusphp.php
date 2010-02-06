@@ -450,7 +450,7 @@ foreach ($vals as $val) {
 
                 }
 
-		$out .= "<div class='thumbimage' style='width: " . $THUMBSIZE . "px;' id='album$album_count'>\n";
+		$out .= "<div class='thumbimage' style='width: " . $TZ10 . "px;' id='album$album_count'>\n";
 		if ($SHOW_IMG_CAPTION == "HOVER") {
 
                                 $out .= "<a class='options' href='$orig_href'><span style='width: " . $TZ10 . "px;'><div class='exif'>$short_caption</div>";
