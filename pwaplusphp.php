@@ -4,7 +4,7 @@ Plugin Name: 	PWA+PHP
 Plugin URI: 	http://pwaplusphp.smccandl.net/
 Description:	PWA+PHP allows you to display public and private (unlisted) Picasa albums within WordPress in your language using Fancybox, Shadowbox or Lightbox.	
 Author: 	Scott McCandless
-Version:	0.2
+Version:	0.3
 Author URI: 	http://pwaplusphp.smccandl.net/
 */
 
@@ -62,6 +62,7 @@ $THIS_VERSION	 	= get_option("pwaplusphp_version");
 $SITE_LANGUAGE   	= get_option("pwaplusphp_language","en_us");
 $PERMIT_IMG_DOWNLOAD  	= get_option("pwaplusphp_permit_download","FALSE");
 $SHOW_FOOTER            = get_option("pwaplusphp_show_footer","FALSE");
+$SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
 
 
 #-----------------------------------------------------------------------------------------
@@ -72,6 +73,8 @@ require_once(dirname(__FILE__)."/lang/$SITE_LANGUAGE.php");
 #----------------------------------------------------------------------------
 # CONFIGURATION
 #----------------------------------------------------------------------------
+$TRUNCATE_FROM = 23; # Should be around 25, depending on font and thumbsize
+$TRUNCATE_TO   = 20; # Should be $TRUNCATE_FROM minus 3
 $OPEN=0;
 
 #----------------------------------------------------------------------------
@@ -188,8 +191,8 @@ foreach ($vals as $val) {
 			# --------------------------------------------------------------------
 			# Added via issue 7, known problem: long names can break div layout
 			# --------------------------------------------------------------------
-			if ((strlen($disp_name) > 23) && ($TRUNCATE_ALBUM_NAME == "TRUE")) {
-                                $disp_name = substr($disp_name,0,20) . "...";
+			if ((strlen($disp_name) > $TRUNCATE_FROM) && ($TRUNCATE_ALBUM_NAME == "TRUE")) {
+                                $disp_name = substr($disp_name,0,$TRUNCATE_TO) . "...";
                         }
                         $album_count++;
 			$total_images = $total_images + $num;
@@ -274,6 +277,7 @@ $THIS_VERSION           = get_option("pwaplusphp_version");
 $SITE_LANGUAGE          = get_option("pwaplusphp_language","en_us");
 $PERMIT_IMG_DOWNLOAD    = get_option("pwaplusphp_permit_download","FALSE");
 $SHOW_FOOTER		= get_option("pwaplusphp_show_footer","FALSE");
+$SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
 
 #-----------------------------------------------------------------------------------------
 # Load Language File
@@ -283,6 +287,7 @@ require_once(dirname(__FILE__)."/lang/$SITE_LANGUAGE.php");
 #----------------------------------------------------------------------------
 # CONFIGURATION
 #----------------------------------------------------------------------------
+$TZ10 = $THUMBSIZE + 10;
 $uri = $_SERVER["REQUEST_URI"];
 if ( get_option('permalink_structure') != '' ) { 
 	# permalinks enabled
@@ -293,7 +298,8 @@ if ( get_option('permalink_structure') != '' ) {
 $image_count=0;
 $picasa_title="NULL";
 $OPEN=0;
-
+$TRUNCATE_FROM = 22; # Should be around 22, depending on font and thumbsize
+$TRUNCATE_TO   = 19; # Should be $TRUNCATE_FROM minus 3
 #----------------------------------------------------------------------------
 # Grab album data from URL
 #----------------------------------------------------------------------------
@@ -405,40 +411,67 @@ foreach ($vals as $val) {
         #----------------------------------------------------------------------------
         if (isset($thumb) && isset($href) && isset($gphotoid)) {
 
+		# Grab the album title once
                 if ($STOP_FLAG != 1) {
 			list($AT,$tags) = split('_',$picasa_title);
-                        $ALBUMS_PER_ROW_LESS_ONE = $ALBUMS_PER_ROW - 1;
-                        $out .= "<div id='title'><h2>$AT</h2></div><p><a class='back_to_list' href='" . $back_link . "'>...$LANG_BACK</a></p><p>&nbsp;</p>\n";
+			$AT = str_replace("\"", "", $AT);
+                        $AT = str_replace("'", "",$AT);
+                        $out .= "<div id='title'><h2>$AT</h2></div><p><a class='back_to_list' href='" . $back_link . "'>...$LANG_BACK</a></p>\n";
                         $STOP_FLAG=1;
                 }
+		
+		# Set image caption
+                if ($text != "") {
+                        #$text = addslashes($text);
+                        $caption = $text;
+                } else {
+                        $caption = $AT . " - " . $filename;
+                }
+		
+		# Keep count of images
                 $count++;
 
-                $out .= "<div class='thumbnail'>";
-                if ($USE_LIGHTBOX == "TRUE") {
+                $out .= "<div class='thumbnail' style='width: " . $TZ10 . ";'>";
+		if ($USE_LIGHTBOX == "TRUE") {
 
-			$text = addslashes($text);
-                        if($text != "") {
-
-				# 2010-01-31 - Disabled for WP plugin due to compatibility issues
-				#if ($PERMIT_IMG_DOWNLOAD == "TRUE") { $dljs = "onmousedown=\"this.title='<a href=\'$orig_href\'>$text</a>';\""; }
-                                $out.= "<a href=\"$href\" $dljs rel=\"lightbox[this]\" title='$text' alt='$text'><img class='pwaimg' src='$thumb' alt='image_from_picasa'></img></a>\n";
-
-                        } else {
-
-				$AT = str_replace("\"", "", $AT);
-				$AT = str_replace("'", "",$AT);
-				# 2010-01-31 - Disabled for WP plugin due to compatibility issues
-				#if ($PERMIT_IMG_DOWNLOAD == "TRUE") { $dljs = "onmousedown=\"this.title='<a href=\'$orig_href\'>$AT - $filename</a>';\""; }
-                                $out.= "<a href=\"$href\" $dljs rel=\"lightbox[this]\" alt='$AT - $filename' title=\"$AT - $filename\"><img class='pwaimg' src='$thumb' alt='image_from_picasa'></img></a>\n";
-
+                        if ((strlen($caption) > $TRUNCATE_FROM) && ($TRUNCATE_ALBUM_NAME == "TRUE")) {
+                                if ($text != "") {
+                                        $short_caption = substr($caption,0,$TRUNCATE_TO) . "...";
+                                } else {
+                                        $short_caption = $filename;
+                                }
                         }
+                        $out .= "<a href='$href' title='$caption' alt='$caption'><img class='pwaimg' src='$thumb' alt='$caption'></img></a>\n";
 
                 } else {
 
                         $newhref="window.open('$href', 'mywindow','scrollbars=0, width=$imgwd,height=$imght');";
-                        $out.= "<a href='#' onclick=\"$newhref\"><img src='$thumb' alt='image_from_picasa'></img></a>\n";
+                        $out .= "<a href='#' onclick=\"$newhref\"><img src='$thumb' alt=''></img></a>\n";
 
                 }
+
+		if ($SHOW_IMG_CAPTION == "HOVER") {
+
+                                $out .= "<a class='options' href='$orig_href'><span style='width: " . $TZ10 . "px;'><div class='exif'>$short_caption</div>";
+
+                } else if ($SHOW_IMG_CAPTION == "ALWAYS") {
+                        $out .= "<p>";
+                        $out .= "<div class='exif' style='width: $THUMBSIZE" . "px" . ">$short_caption</div>";
+                        if ($PERMIT_IMG_DOWNLOAD == "TRUE") {
+                                $out .= "<div class='dlimg'><a href='$orig_href'><img border=0 style='padding-left: 10px;' src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' /></a></div>";
+                        }
+                        $out .= "</p>";
+                } else {
+                        $out .= "<p>&nbsp;</p>";
+                }
+
+                if (($PERMIT_IMG_DOWNLOAD == "TRUE") && ($SHOW_IMG_CAPTION == "HOVER")) {
+                        $out .= "<div class='dlimg'><img border=0 style='padding-left: 10px;' src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' /></div>";
+                        $out .= "</span></a>";
+                } else if (($PERMIT_IMG_DOWNLOAD == "FALSE") && ($SHOW_IMG_CAPTION == "HOVER")) {
+                        $out .= "</span></a>";
+                }
+
                 $out.= "</div>";
 
                 #----------------------------------
