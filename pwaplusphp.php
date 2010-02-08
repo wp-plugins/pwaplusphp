@@ -173,8 +173,8 @@ foreach ($vals as $val) {
 				$box = strlen(strpos($title,"Drop Box"));
 				if ($pos > 0) { 
 					$pos = 0; 
-				#} else if (($box > 0) && ($SHOW_DROP_BOX == "TRUE")) {	# Added to allow user to control whether
-				#	$pos = 0;					# drop box appears in gallery list
+				} else if (($box > 0) && ($SHOW_DROP_BOX == "TRUE")) {	# Added to allow user to control whether
+					$pos = 0;					# drop box appears in gallery list
 				} else { 
 					$pos = 1; 
 				}
