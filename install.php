@@ -78,7 +78,7 @@ $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
 	echo "<tr><td colspan=2><i>Select the language you wish to use.  More may be available <a href='http://code.google.com/p/pwaplusphp/downloads/list'>on the PWA+PHP download page</a></i></td></tr>";	
 
 	echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Images Per Page</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_images_per_page'>";
-	$per_page = array(5,6,8,12,15,16,20,24,25,28,30,32,35,36,40,42,48,50);
+	$per_page = array(0,5,6,8,12,15,16,20,24,25,28,30,32,35,36,40,42,48,50);
         foreach ($per_page as $ipp) {
                 if ($IMAGES_PER_PAGE != $ipp) {
                         echo "<option value='$ipp'>$ipp</option>";
