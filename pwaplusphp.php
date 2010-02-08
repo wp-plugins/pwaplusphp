@@ -441,7 +441,7 @@ foreach ($vals as $val) {
                                         $short_caption = $filename;
                                 }
                         }
-                        $out .= "<a href='$href' title='$caption' alt='$caption'><img class='pwaimg' src='$thumb' alt='$caption'></img></a>\n";
+                        $out .= "<a href='$href'><img class='pwaimg' src='$thumb' alt='$caption'></img></a>\n";
 
                 } else {
 
