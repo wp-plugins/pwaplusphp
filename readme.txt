@@ -37,6 +37,10 @@ After the token generation step, simply set the "Public Albums Only" option to T
 
 See [our wiki](http://code.google.com/p/pwaplusphp/w/list)
 
+= PWA+PHP is not working with Lightbox, why?
+
+Please use [Lightbox 2 plugin by Rupert Morris](http://wordpress.org/extend/plugins/lightbox-2/), it provides the Lightbox effect and works as expected with PWA+PHP.
+
 == Screenshots ==
 
 1. Main gallery view, description on mouse over 
