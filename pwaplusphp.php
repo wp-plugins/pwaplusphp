@@ -257,7 +257,7 @@ if ($SHOW_FOOTER == "TRUE") {
 return $out;
 }
 
-function showAlbumContents($ALBUM) {
+function showAlbumContents($ALBUM,$IN_POST = null) {
 
 $USE_LIGHTBOX="TRUE";
 $STANDALONE_MODE="TRUE";
@@ -321,6 +321,10 @@ $meta_tag = "";
 #----------------------------------------------------------------------------
 # VARIABLES FOR PAGINATION
 #----------------------------------------------------------------------------
+if ($IN_POST == "TRUE") {
+        $IMAGES_PER_PAGE = 0;
+}
+
 if ($IMAGES_PER_PAGE == 0) {
 
 	$file = "http://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER . "/album/" . $ALBUM . "?kind=photo&thumbsize=" . $THUMBSIZE . "c&imgmax=" . $IMGMAX;
@@ -416,7 +420,9 @@ foreach ($vals as $val) {
 			list($AT,$tags) = split('_',$picasa_title);
 			$AT = str_replace("\"", "", $AT);
                         $AT = str_replace("'", "",$AT);
-                        $out .= "<div id='title'><h2>$AT</h2></div><p><a class='back_to_list' href='" . $back_link . "'>...$LANG_BACK</a></p>\n";
+			if ($IN_POST != "TRUE") {
+                                $out .= "<div id='title'><h2>$AT</h2></div><p><a class='back_to_list' href='" . $back_link . "'>...$LANG_BACK</a></p>\n";
+                        }
                         $STOP_FLAG=1;
                 }
 		
