@@ -68,7 +68,11 @@ $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
         		while (($file = readdir($dh)) !== false) {
 				list($fn,$ext) = split ('\.',$file);
 				if ($ext == "php") {
-					echo "<option value='$fn'>$fn</option>";
+					if ($fn != $SITE_LANGUAGE) {
+						echo "<option value='$fn'>$fn</option>";
+					} else {
+						echo "<option value='$fn' selected>$fn</option>";
+					}
 				}
         		}
         		closedir($dh);
