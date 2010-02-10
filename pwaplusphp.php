@@ -288,6 +288,7 @@ require_once(dirname(__FILE__)."/lang/$SITE_LANGUAGE.php");
 # CONFIGURATION
 #----------------------------------------------------------------------------
 $TZ10 = $THUMBSIZE + 10;
+$TZM10 = $THUMBSIZE - 10;
 $uri = $_SERVER["REQUEST_URI"];
 if ( get_option('permalink_structure') != '' ) { 
 	# permalinks enabled
@@ -437,50 +438,52 @@ foreach ($vals as $val) {
 		# Keep count of images
                 $count++;
 
-                $out .= "<div class='thumbnail' style='width: " . $TZ10 . "px;'>";
-		if ($USE_LIGHTBOX == "TRUE") {
-
-                        if ((strlen($caption) > $TRUNCATE_FROM) && ($TRUNCATE_ALBUM_NAME == "TRUE")) {
-                                if ($text != "") {
-                                        $short_caption = substr($caption,0,$TRUNCATE_TO) . "...";
-                                } else {
-                                        $short_caption = $filename;
-                                }
+		# Shorten caption as necessary
+                if ((strlen($caption) > $TRUNCATE_FROM) && ($TRUNCATE_ALBUM_NAME == "TRUE")) {
+                        if ($text != "") {
+                                $short_caption = substr($caption,0,$TRUNCATE_TO) . "...";
+                        } else {
+                                $short_caption = $filename;
                         }
-                        $out .= "<a href='$href'><img class='pwaimg' src='$thumb' alt='$caption'></img></a>\n";
-
                 } else {
+			$short_caption = $caption;
+		}
 
-                        $newhref="window.open('$href', 'mywindow','scrollbars=0, width=$imgwd,height=$imght');";
-                        $out .= "<a href='#' onclick=\"$newhref\"><img src='$thumb' alt=''></img></a>\n";
+		$out .= "<div class='thumbnail' style='width: " . $TZ10 . "px;'>\n";
+                $out .= " <a href='$href'><img class='pwaimg' src='$thumb' alt='$caption'></img></a>\n";
 
-                }
+                # Show Caption on Hover
+                if ($SHOW_IMG_CAPTION == "HOVER") {
 
-		$out .= "<div class='thumbimage' style='width: " . $TZ10 . "px;' id='album$album_count'>\n";
-		if ($SHOW_IMG_CAPTION == "HOVER") {
+                        $out .= " <div id='options' style='width:" . $THUMBSIZE . "px'>\n";
+                        $out .= "  <span>$short_caption</span>\n";
 
-                                $out .= "<a class='options' href='$orig_href'><span style='width: " . $TZ10 . "px;'><div class='exif'>$short_caption</div>";
+                        # Download Icon
+                        $download_div  = "<span style='margin-left: " . $TZM10 . "px;'>\n";
+                        $download_div .= "<a 'Save $filename' title='Save $filename' href='$orig_href'>\n";
+                        $download_div .= "<img border=0 style='padding-left: 5px;' src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' />\n";
+                        $download_div .= "</a></span>\n";
 
                 } else if ($SHOW_IMG_CAPTION == "ALWAYS") {
-                        $out .= "<p>";
-                        $out .= "<div class='exif' style='width: $THUMBSIZE" . "px" . "'>$short_caption</div>";
-                        if ($PERMIT_IMG_DOWNLOAD == "TRUE") {
-                                $out .= "<div class='dlimg'><a alt='Save $filename' title='Save $filename' href='$orig_href'><img border=0 style='padding-left: 10px;' src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' /></a></div>";
-                        }
-                        $out .= "</p>";
-                } else {
-                        $out .= "<p>&nbsp;</p>";
+
+                        $out .= " <div style='width:" . $TZ10 . "px'>\n";
+                        $out .= "  <span style='float: left'>$short_caption</span>\n";
+
+                        # Download Icon
+                        $download_div  = "<span style='float: right'>\n";
+                        $download_div .= "<a 'Save $filename' title='Save $filename' href='$orig_href'>\n";
+                        $download_div .= "<img border=0 style='padding-left: 5px;' src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' />\n";
+                        $download_div .= "</a></span>\n";
+
                 }
 
-                if (($PERMIT_IMG_DOWNLOAD == "TRUE") && ($SHOW_IMG_CAPTION == "HOVER")) {
-                        $out .= "<div class='dlimg'><img border=0 style='padding-left: 10px;' src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' /></div>";
-                        $out .= "</span></a>";
-                } else if (($PERMIT_IMG_DOWNLOAD == "FALSE") && ($SHOW_IMG_CAPTION == "HOVER")) {
-                        $out .= "</span></a>";
+                # Show Download Icon
+                if ($PERMIT_IMG_DOWNLOAD == "TRUE") {
+                        $out .= $download_div;
                 }
 
-		$out.= "</div>";
-                $out.= "</div>";
+                $out .= " </div>\n";
+                $out .= "</div>\n";
 
                 #----------------------------------
                 # Reset the variables
