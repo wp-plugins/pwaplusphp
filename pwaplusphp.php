@@ -437,7 +437,7 @@ foreach ($vals as $val) {
 		# Keep count of images
                 $count++;
 
-                $out .= "<div class='thumbnail' style='width: " . $TZ10 . ";'>";
+                $out .= "<div class='thumbnail' style='width: " . $TZ10 . "px;'>";
 		if ($USE_LIGHTBOX == "TRUE") {
 
                         if ((strlen($caption) > $TRUNCATE_FROM) && ($TRUNCATE_ALBUM_NAME == "TRUE")) {
@@ -586,7 +586,7 @@ function pwaplusphp_shortcode( $atts, $content = null ) {
         } else {
 		if ($album != "NULL") {
 			if ($album != "random_photo") {
-				$out = showAlbumContents($album);
+				$out = showAlbumContents($album,"TRUE");
 			} else {
 				$out = get_include_contents(dirname(__FILE__).'/one_random.php');
 			}
