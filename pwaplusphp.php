@@ -205,7 +205,7 @@ foreach ($vals as $val) {
                    	} else {
                         	$urlchar = '&';
                    	}
-			$out .= "<a class='overlay' href='" . $_SERVER["REQUEST_URI"] . $urlchar . "album=$picasa_name'><img class='pwaimg' alt='image_from_picasa' src='$thumb'></img>";
+			$out .= "<a class='overlay' href=\"" . $_SERVER["REQUEST_URI"] . $urlchar . "album=$picasa_name\"><img class='pwaimg' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
 
 			# ------------------------------------------------
 			# Overlay album details on thumbnail if requested
