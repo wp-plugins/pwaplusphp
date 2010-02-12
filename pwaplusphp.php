@@ -464,6 +464,8 @@ foreach ($vals as $val) {
                         $download_div .= "<img border=0 style='padding-left: 5px;' src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' />\n";
                         $download_div .= "</a></span>\n";
 
+			$out .= "</div>";
+
                 } else if ($SHOW_IMG_CAPTION == "ALWAYS") {
 
                         $out .= " <div style='width:" . $TZ10 . "px'>\n";
@@ -475,6 +477,7 @@ foreach ($vals as $val) {
                         $download_div .= "<img border=0 style='padding-left: 5px;' src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' />\n";
                         $download_div .= "</a></span>\n";
 
+			$out .= "</div>";
                 }
 
                 # Show Download Icon
@@ -482,7 +485,6 @@ foreach ($vals as $val) {
                         $out .= $download_div;
                 }
 
-                $out .= " </div>\n";
                 $out .= "</div>\n";
 
                 #----------------------------------
