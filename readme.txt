@@ -3,7 +3,7 @@ Contributors: smccandl
 Donate link: http://pwaplusphp.smccandl.net/
 Tags: picasa web albums, picasa, pwa, lightbox, fancybox, shadowbox
 Requires at least: 2.9.1
-Tested up to: 2.9.1
+Tested up to: 2.9.2
 Stable tag: trunk
 
 PWA+PHP allows you to display public and private (unlisted) Picasa albums within WordPress in your language using Fancybox, Shadowbox or Lightbox.
