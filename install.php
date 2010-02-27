@@ -36,7 +36,8 @@ function get_options() {
 $GDATA_TOKEN		= get_option("pwaplusphp_gdata_token");
 $PICASAWEB_USER         = get_option("pwaplusphp_picasa_username");
 $IMGMAX                 = get_option("pwaplusphp_image_size","640");
-$THUMBSIZE              = get_option("pwaplusphp_thumbnail_size",160);
+$GALLERY_THUMBSIZE      = get_option("pwaplusphp_thumbnail_size",160);
+$ALBUM_THUMBSIZE      	= get_option("pwaplusphp_album_thumbsize",160);
 $REQUIRE_FILTER         = get_option("pwaplusphp_require_filter","FALSE");
 $IMAGES_PER_PAGE        = get_option("pwaplusphp_images_per_page",0);
 $PUBLIC_ONLY            = get_option("pwaplusphp_public_only","FALSE");
@@ -49,17 +50,20 @@ $SITE_LANGUAGE          = get_option("pwaplusphp_language","en_us");
 $PERMIT_IMG_DOWNLOAD    = get_option("pwaplusphp_permit_download","FALSE");
 $SHOW_FOOTER    	= get_option("pwaplusphp_show_footer","FALSE");
 $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
+$CAPTION_LENGTH         = get_option("pwaplusphp_caption_length","23");
+$DESCRIPTION_LENGTH     = get_option("pwaplusphp_description_length","120");
 
-	echo "<h2>Set PWA+PHP Options</h2>";
+	echo "<h2>PWA+PHP Settings Panel</h2>";
 	echo "<form name=form1 action='$self?page=pwaplusphp&loc=finish' method='post'>\n";
-	echo "<table width=700>\n";
-	echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Picasaweb User</strong></td><td style='padding-top: 20px;'><input type='text' name='pwaplusphp_picasa_username' value='$PICASAWEB_USER'></td></tr>\n";
-	echo "<tr><td colspan=2><i>Enter your Picasaweb username.  This is the username you use to login to view your albums.</i></td></tr>";
+	echo "<table cellspacing=5 width=700>\n";
+	echo "<tr><td valign=top colspan=3><h3>Picasa Access Settings</h3></td></tr>\n";
+	echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Picasaweb User</strong></td><td valign=top style='padding-bottom: 20px;'><input style='width: 150px;' type='text' name='pwaplusphp_picasa_username' value='$PICASAWEB_USER'></td><td valign=top><i>Enter your Picasa username.</i></td></tr>";
 
-	echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>GData Token</strong></td><td style='padding-top: 20px;'>$GDATA_TOKEN</td></tr>";
-	echo "<tr><td colspan=2><i>This token was generated during Step 1 and it allows PWA+PHP to access and display your private (unlisted) Picasa albums. The value cannot be changed.</i></td></tr>";
+	echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>GData Token</strong></td><td valign=top style='padding-bottom: 20px;'>$GDATA_TOKEN</td>";
+	echo "<td valign=top><i>Allows access to your unlisted Picasa albums.</i></td></tr>";
 
-	echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Site Language</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_language'>";
+	echo "<tr><td valign=top colspan=3><h3>Basic Display Settings</h3></td></tr>\n";
+	echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Site Language</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_language'>";
 		
 	$dir = dirname(__FILE__)."/lang/";
 	// Open a known directory, and proceed to read its contents
@@ -78,10 +82,9 @@ $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
         		closedir($dh);
     		}
 	}
-	echo "</select></td></tr>";
-	echo "<tr><td colspan=2><i>Select the language you wish to use.  More may be available <a href='http://code.google.com/p/pwaplusphp/downloads/list'>on the PWA+PHP download page</a></i></td></tr>";	
+	echo "</select></td><td valign=top><i>Sets the display language.  More may be available <a href='http://code.google.com/p/pwaplusphp/downloads/list'>here</a>.</i></td></tr>";	
 
-	echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Images Per Page</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_images_per_page'>";
+	echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Images Per Page</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_images_per_page'>";
 	$per_page = array(0,5,6,8,12,15,16,20,24,25,28,30,32,35,36,40,42,48,50);
         foreach ($per_page as $ipp) {
                 if ($IMAGES_PER_PAGE != $ipp) {
@@ -91,9 +94,8 @@ $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
                 }
         }
         echo "</select>\n";
-        echo "</td></tr>\n";
-        echo "<tr><td colspan=2><i>Set the number of thumbnails to display per page. Value of 0 means don't paginate.</i></td></tr>";
-	echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Image Size</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_image_size'>";
+        echo "</td><td valign=top><i>Sets the number of thumbnails per page. Zero means don't paginate.</i></td></tr>";
+	echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Image Size</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_image_size'>";
 	$image_sizes = array("1600","1440","1280","1152","1024","912","800","720","640","576","512","400","320","288","200");
 	foreach ($image_sizes as $size) {
 		if ($IMGMAX != $size) {
@@ -103,42 +105,111 @@ $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
 		}
 	}
 	echo "</select>\n";
-	echo "</td></tr>\n";
-	echo "<tr><td colspan=2><i>Set the display size for full images.  These values are supported by the Picasaweb API.</i></td></tr>";
-	echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Thumbnail Size</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_thumbnail_size'>";
+	echo "</td><td valign=top><i>Sets the size of the image displayed in the Lightbox.</i></td></tr>";
+	#--------------
+        echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Album Thumbnail Size</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_album_thumbsize'>";
+        $thumb_sizes = array("160","150","144","104","72","64","48","32");
+        foreach ($thumb_sizes as $size) {
+                if ($ALBUM_THUMBSIZE != $size) {
+                        echo "<option value='$size'>$size</option>";
+                } else {
+                        echo "<option value='$size' selected>$size</option>";
+                }
+        }
+        echo "</select>\n";
+        echo "</td><td valign=top><i>Sets the album thumbnail size. May need to alter overlay CSS if value 160.</i></td></tr>";
+	#--------------------
+	echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Photo Thumbnail Size</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_thumbnail_size'>";
 	$thumb_sizes = array("160","150","144","104","72","64","48","32");
         foreach ($thumb_sizes as $size) {
-                if ($THUMBSIZE != $size) {
+                if ($GALLERY_THUMBSIZE != $size) {
                         echo "<option value='$size'>$size</option>";
                 } else {
                         echo "<option value='$size' selected>$size</option>";
                 }
         }
 	echo "</select>\n";
-	echo "</td></tr>\n";
-	echo "<tr><td colspan=2><i>Set the thumbnail size. These values are supported by the Picasaweb API.</i></td></tr>";
-        #echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Use Lightbox</strong></td><td style='padding-top: 20px;'><select name='ul'>";
+	echo "</td><td valign=top><i>Sets the photo thumbnails size.</i></td></tr>";
+	#-------------------------
+        #echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Use Lightbox</strong></td><td valign=top style='padding-bottom: 20px;'><select name='ul'>";
         #echo "<option value='TRUE'>TRUE</option>";
         #echo "<option value='FALSE'>FALSE</option>";
         #echo "</select>\n";
         #echo "</td></tr>\n";
-	#echo "<tr><td colspan=2><i>Choose whether or not to use <a href='http://www.huddletogether.com/projects/lightbox2/'>Lightbox v2</a>.  It must be installed for this to work. When set to FALSE, full size images are displayed in a pop-up window.</i></td></tr>";
-	#echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Standalone Mode</strong></td><td style='padding-top: 20px;'><select name='sm'>";
+	#echo "<tr><td valign=top colspan=2><i>Choose whether or not to use <a href='http://www.huddletogether.com/projects/lightbox2/'>Lightbox v2</a>.  It must be installed for this to work. When set to FALSE, full size images are displayed in a pop-up window.</i></td></tr>";
+	#echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Standalone Mode</strong></td><td valign=top style='padding-bottom: 20px;'><select name='sm'>";
         #echo "<option value='TRUE' selected>TRUE</option>";
         #echo "<option value='FALSE'>FALSE</option>";
         #echo "</select>\n";
         #echo "</td></tr>\n";
-        #echo "<tr><td colspan=2><i>This option allows you to specify whether this code will run within a CMS (FALSE) or whether the pages will exist outside a CMS (TRUE).  Selecting FALSE suppresses output of &lt;html&gt;, &lt;head&gt; and &lt;body&gt; tags in the source.</i></td></tr>";
-	echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Require Filter</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_require_filter'>";
+        #echo "<tr><td valign=top colspan=2><i>This option allows you to specify whether this code will run within a CMS (FALSE) or whether the pages will exist outside a CMS (TRUE).  Selecting FALSE suppresses output of &lt;html&gt;, &lt;head&gt; and &lt;body&gt; tags in the source.</i></td></tr>";
+	echo "<tr><td valign=top colspan=3><h3>Caption & Description Settings</h3></td></tr>\n";
+#
+# ALBUM DETAILS
+#
+        echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Album Details</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_album_details'>";
+        if ($SHOW_ALBUM_DETAILS == "FALSE") {
+                $details_true = "";
+                $details_false= "selected";
+        } else {
+                $details_true = "selected";
+                $details_false= "";
+        }
+        echo "<option value='TRUE' $details_true>TRUE</option>";
+        echo "<option value='FALSE' $details_false>FALSE</option>";
+        echo "</select>\n";
+        echo "</td><td valign=top><i>Overlay album thumbnail with description on mouse hover?</i></td></tr>";
+        # -------
+echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Truncate Album Names</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_truncate_names'>";
+        if ($TRUNCATE_ALBUM_NAME == "FALSE") {
+                $truncate_true = "";
+                $truncate_false= "selected";
+        } else {
+                $truncate_true = "selected";
+                $truncate_false= "";
+        }
+        echo "<option value='TRUE' $truncate_true>TRUE</option>";
+        echo "<option value='FALSE'$truncate_false>FALSE</option>";
+        echo "</select>\n";
+        echo "</td><td valign=top><i>Shorten album name to ensure proper display of fluid layout?</i></td></tr>";
+	
+	#------------
+	echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Description Length Limit</strong></td><td valign=top style='padding-bottom: 20px;'><input style='width: 50px;' type='text' name='pwaplusphp_description_length' value='$DESCRIPTION_LENGTH'></td><td valign=top><i>Trim display length of description to specific number of characters</i></td></tr>";
+	# -------
+        echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Show Photo Caption</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_show_caption'>";
+        if ($SHOW_IMG_CAPTION == "ALWAYS") {
+                $caption_always = "selected";
+                $caption_hover  = "";
+                $caption_never  = "";
+        } else if ($SHOW_IMG_CAPTION == "HOVER") {
+                $caption_always = "";
+                $caption_hover  = "selected";
+                $caption_never  = "";
+        } else {
+                $caption_always = "";
+                $caption_hover  = "";
+                $caption_never  = "selected";
+        }
+        echo "<option value='ALWAYS' $caption_always>Always</option>";
+        echo "<option value='HOVER' $caption_hover>On Hover</option>";
+        echo "<option value='NEVER' $caption_never>Never</option>";
+        echo "</select>\n";
+        echo "</td><td valign=top><i>Show captions under photos? Works best with larger thumbnails.</i></td></tr>";
+	#------------
+	echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Caption Length Limit</strong></td><td valign=top style='padding-bottom: 20px;'><input style='width: 50px;' type='text' name='pwaplusphp_caption_length' value='$CAPTION_LENGTH'></td><td valign=top><i>Trim display length of captions to specific number of characters</i></td></tr>";
+	#-----------
+	echo "<tr><td valign=top colspan=3><h3>Additional Display Settings</h3></td></tr>\n";
+	#-----------
+	echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Require Filter</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_require_filter'>";
         echo "<option value='TRUE'>TRUE</option>";
         echo "<option value='FALSE' selected>FALSE</option>";
         echo "</select>\n";
-        echo "</td></tr>\n";
-        echo "<tr><td colspan=2><i>Set this to FALSE unless you want to *require* a search filter in the URL -- you can still filter albums with this set to FALSE.  Setting to TRUE *requires* a filter string in the URL to prevent certain users from seeing certain albums.</i></td></tr>";
+        echo "</td><td valign=top><i>Is filter required? Most users should select FALSE.</i></td></tr>";
+	#-----------
 #
 # PUBLIC ALBUMS
 #
-	echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Public Albums Only</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_public_only'>";
+	echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Public Albums Only</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_public_only'>";
 	if ($PUBLIC_ONLY == "TRUE") {
 		$public_true = "selected";
 		$public_false= "";
@@ -149,40 +220,9 @@ $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
         echo "<option value='TRUE' $public_true>TRUE</option>";
         echo "<option value='FALSE' $public_false>FALSE</option>";
         echo "</select>\n";
-        echo "</td></tr>\n";
-        echo "<tr><td colspan=2><i>This option allows you to specify whether to display only public or both public and private albums of the user specified above. </i></td></tr>";
-#
-# ALBUM DETAILS
-#
-	echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Album Details</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_album_details'>";
-	if ($SHOW_ALBUM_DETAILS == "FALSE") {
-                $details_true = "";
-                $details_false= "selected";
-        } else {
-                $details_true = "selected";
-                $details_false= "";
-        }
-        echo "<option value='TRUE' $details_true>TRUE</option>";
-        echo "<option value='FALSE' $details_false>FALSE</option>";
-        echo "</select>\n";
-        echo "</td></tr>\n";
-        echo "<tr><td colspan=2><i>Setting this to TRUE will overlay the album details on the gallery thumbnails when the user hovers the mouse over the image.</i></td></tr>";
+        echo "</td><td valign=top><i>Set to TRUE to hide unlisted albums.</i></td></tr>";
 	# -------
-	echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Truncate Album Names</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_truncate_names'>";
-	if ($TRUNCATE_ALBUM_NAME == "FALSE") {
-                $truncate_true = "";
-                $truncate_false= "selected";
-        } else {
-                $truncate_true = "selected";
-                $truncate_false= "";
-        }
-        echo "<option value='TRUE' $truncate_true>TRUE</option>";
-        echo "<option value='FALSE'$truncate_false>FALSE</option>";
-        echo "</select>\n";
-        echo "</td></tr>\n";
-	echo "<tr><td colspan=2><i>Album names are truncated by default on the gallery page to ensure the div-based layout displays properly.  Set this to FALSE to show the full album name.</i></td></tr>";
-	# -------
-        echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Show Drop Box</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_show_dropbox'>";
+        echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Show Drop Box</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_show_dropbox'>";
 	if ($SHOW_DROP_BOX == "FALSE") {
                 $dropbox_true = "";
                 $dropbox_false= "selected";
@@ -193,33 +233,11 @@ $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
         echo "<option value='TRUE' $dropbox_true>TRUE</option>";
         echo "<option value='FALSE' $dropbox_false>FALSE</option>";
         echo "</select>\n";
-        echo "</td></tr>\n";
-	echo "<tr><td colspan=2><i>The Drop Box is a special Picasa album that stores images uploaded by email. <a target='_BLANK' href='http://picasa.google.com/support/bin/answer.py?hl=en&answer=73970'>More info here</a>.  Setting this variable to TRUE forces diplay of the drop box on all pages, even when a filter is specified.</i></td></tr>";
-	# -------
-	echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Show Photo Caption</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_show_caption'>";
-	if ($SHOW_IMG_CAPTION == "ALWAYS") {
-                $caption_always = "selected";
-                $caption_hover  = "";
-		$caption_never  = "";
-        } else if ($SHOW_IMG_CAPTION == "HOVER") {
-		$caption_always = "";
-                $caption_hover  = "selected";
-                $caption_never  = "";
-        } else {
-		$caption_always = "";
-                $caption_hover  = "";
-                $caption_never  = "selected";
-	}
-	echo "<option value='ALWAYS' $caption_always>Always</option>";
-        echo "<option value='HOVER' $caption_hover>On Hover</option>";
-        echo "<option value='NEVER' $caption_never>Never</option>";
-        echo "</select>\n";
-        echo "</td></tr>\n";
-	echo "<tr><td colspan=2><i>This option allows you to specify whether or not captions are displayed under photos.  Options are always, never, or only when the user hovers over the space below the thumbnail. Click the caption to save the image if PERMIT_IMG_DOWNLOAD is set to TRUE. Captions work best with largr thumbnail sizes.</i></td></tr>";
+        echo "</td><td valign=top><i>Show the <a target='_BLANK' href='http://picasa.google.com/support/bin/answer.py?hl=en&answer=73970'>Drop Box</a> on all pages?</i></td></tr>";
 	# -------
 	# Enabled for WordPress plugin v0.3
 	#
-        echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Permit Image Download</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_permit_download'>";
+        echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Permit Image Download</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_permit_download'>";
 	if ($PERMIT_IMG_DOWNLOAD == "FALSE") {
                 $download_true = "";
                 $download_false= "selected";
@@ -230,11 +248,10 @@ $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
         echo "<option value='TRUE' $download_true>TRUE</option>";
         echo "<option value='FALSE' $download_false>FALSE</option>";
         echo "</select>\n";
-        echo "</td></tr>\n";
-        echo "<tr><td colspan=2><i>This option determines whether the user can download the original full-size image by clicking on the caption under the photo. Set to TRUE to enable and FALSE to disable.</i></td></tr>";
+        echo "</td><td valign=top><i>Determines whether the user can download the original full-size image.</i></td></tr>";
 	# -------
 	# -------
-        echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Show Footer Message</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_show_footer'>";
+        echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Show Footer Message</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_show_footer'>";
         if ($SHOW_FOOTER == "TRUE") {
                 $footer_true = "selected";
                 $footer_false= "";
@@ -245,9 +262,8 @@ $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
         echo "<option value='TRUE' $footer_true>TRUE</option>";
         echo "<option value='FALSE' $footer_false>FALSE</option>";
         echo "</select>\n";
-        echo "</td></tr>\n";
-        echo "<tr><td colspan=2><i>Setting this to true allows PWA+PHP to display a 'generated by' message at the bottom of the page, so other users can learn about it.</i></td></tr>";
-        #echo "<tr><td style='padding-top: 20px; width: 200px;'><strong>Check For Updates</strong></td><td style='padding-top: 20px;'><select name='pwaplusphp_check_updates'>";
+        echo "</td><td valign=top><i>Allow PWA+PHP to display a 'generated by' message at the bottom of the page?</i></td></tr>";
+        #echo "<tr><td valign=top style='padding-bottom: 20px; width: 200px;'><strong>Check For Updates</strong></td><td valign=top style='padding-bottom: 20px;'><select name='pwaplusphp_check_updates'>";
 	#if ($CHECK_FOR_UPDATES == "FALSE") {
         #        $updates_true = "";
         #        $updates_false= "selected";
@@ -259,7 +275,7 @@ $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
         #echo "<option value='FALSE' $update_false>FALSE</option>";
         #echo "</select>\n";
         #echo "</td></tr>\n";
-        #echo "<tr><td colspan=2><i>When TRUE, the script will check the server once per month and print a small message at the bottom of the page if a newer version of the code is available.  Set to FALSE to completely disable update checks.</i></td></tr>";
+        #echo "<tr><td valign=top colspan=2><i>When TRUE, the script will check the server once per month and print a small message at the bottom of the page if a newer version of the code is available.  Set to FALSE to completely disable update checks.</i></td></tr>";
 	echo "</table>\n";
 ?>
 <p class="submit">
@@ -309,11 +325,12 @@ function set_gdata_token() {
 
 function set_options() {
 
-	$THIS_VERSION = "0.2";
+	$THIS_VERSION = "0.4";
 
 	update_option("pwaplusphp_picasa_username", $_POST['pwaplusphp_picasa_username']);
 	update_option("pwaplusphp_image_size",$_POST['pwaplusphp_image_size']);
 	update_option("pwaplusphp_thumbnail_size",$_POST['pwaplusphp_thumbnail_size']);	
+	update_option("pwaplusphp_album_thumbsize",$_POST['pwaplusphp_album_thumbsize']);
 	update_option("pwaplusphp_require_filter",$_POST['pwaplusphp_require_filter']);
 	update_option("pwaplusphp_images_per_page",$_POST['pwaplusphp_images_per_page']);
 	update_option("pwaplusphp_public_only",$_POST['pwaplusphp_public_only']);
@@ -326,6 +343,8 @@ function set_options() {
 	update_option("pwaplusphp_permit_download",$_POST['pwaplusphp_permit_download']);
 	update_option("pwaplusphp_show_footer",$_POST['pwaplusphp_show_footer']);
 	update_option("pwaplusphp_show_caption",$_POST['pwaplusphp_show_caption']);
+	update_option("pwaplusphp_description_length",$_POST['pwaplusphp_description_length']);
+	update_option("pwaplusphp_caption_length",$_POST['pwaplusphp_caption_length']);
 
 	
 	echo "<h2>Options Saved</h2>";
@@ -372,4 +391,4 @@ if ($loc == "gdata") {
 
 #}
 
-?>
+

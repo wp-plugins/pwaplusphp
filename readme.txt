@@ -41,6 +41,10 @@ See [our wiki](http://code.google.com/p/pwaplusphp/w/list)
 
 Please use [Lightbox 2 plugin by Rupert Morris](http://wordpress.org/extend/plugins/lightbox-2/), it provides the Lightbox effect and works as expected with PWA+PHP.
 
+= When I hover over an album, the detail overlay is either too big or too small. Why? =
+
+The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If you change that size via the settings page, you may need to adjust the CSS settings by changing the 90% and 100% values on the a.overlay:hover line.
+
 == Screenshots ==
 
 1. Main gallery view, description on mouse over 
@@ -51,6 +55,12 @@ Please use [Lightbox 2 plugin by Rupert Morris](http://wordpress.org/extend/plug
 
 == Changelog ==
 
+= 0.4 =
+* New option allows for different size album and photo thumbnails
+* New options to set trim length for descriptions and captions via settings panel
+* Re-designed install panel with settings in groups
+* Forced "always" caption mode for IE6 users when using "hover" caption mode
+
 = 0.3 =
 * Beta version - added filter functionality to shortcode and caption display options in gallery view
 
@@ -58,6 +68,9 @@ Please use [Lightbox 2 plugin by Rupert Morris](http://wordpress.org/extend/plug
 * Alpha version - initial release.
 
 == Upgrade Notice ==
+
+= 0.4 -
+* New config option for setting the album thumbnail size, redesigned settings page and ability to set trim lengths on settings page
 
 = 0.3 =
 * Upgrade to use filter in shortcode and for caption options in gallery view
@@ -76,4 +89,4 @@ Please use [Lightbox 2 plugin by Rupert Morris](http://wordpress.org/extend/plug
 * Install script guides setup and token generation for private albums
 * Interface configuration via [16 variables](http://code.google.com/p/pwaplusphp/wiki/ConfigurationOptions) (image size, thumbnail size, pagination, etc)
 * Modify included CSS file to match your site exactly
-* Available in 7 languages and extensible to others!
+* Available in 8 languages and extensible to others!
