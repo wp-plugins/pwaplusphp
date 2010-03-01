@@ -1,7 +1,7 @@
 === Plugin Name ===
 Contributors: smccandl 
 Donate link: http://pwaplusphp.smccandl.net/
-Tags: picasa web albums, picasa, pwa, lightbox, fancybox, shadowbox
+Tags: picasa, picasa web albums, pwa, lightbox, fancybox, shadowbox, highslide
 Requires at least: 2.9.1
 Tested up to: 2.9.2
 Stable tag: trunk
@@ -40,6 +40,16 @@ See [our wiki](http://code.google.com/p/pwaplusphp/w/list)
 = PWA+PHP is not working with Lightbox, why? =
 
 Please use [Lightbox 2 plugin by Rupert Morris](http://wordpress.org/extend/plugins/lightbox-2/), it provides the Lightbox effect and works as expected with PWA+PHP.
+
+= PWA+PHP is not working with Highslide, why? =
+
+Install [Auto Highslide](http://wordpress.org/extend/plugins/auto-highslide/) and change line 466 in pwaplusphp.php from:
+
+$out .= " <a href='$href'><img class='pwaimg' src='$thumb' alt='$caption' /></a>\n";
+
+to
+
+$out .= " <a href='$href' class='highslide-image' onclick=\"return hs.expand(this);\"><img class='pwaimg' src='$thumb' alt='$caption' /></a>\n";
 
 = When I hover over an album, the detail overlay is either too big or too small. Why? =
 
