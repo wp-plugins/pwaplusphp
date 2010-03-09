@@ -29,6 +29,10 @@ Check out [the demo](http://pwaplusphp.smccandl.net/pwademo.php) to see the code
 
 == Frequently Asked Questions ==
 
+= No photos, just 'Gallery photos in Albums' =
+
+This indicates an issue with your webserver's ability to connect to Picasa.  See [Issue 23](http://code.google.com/p/pwaplusphp/issues/detail?id=23)
+
 = What if I don't want to display private (unlisted) albums? =
 
 After the token generation step, simply set the "Public Albums Only" option to TRUE.
@@ -43,13 +47,7 @@ Please use [Lightbox 2 plugin by Rupert Morris](http://wordpress.org/extend/plug
 
 = PWA+PHP is not working with Highslide, why? =
 
-Install [Auto Highslide](http://wordpress.org/extend/plugins/auto-highslide/) and change line 466 in pwaplusphp.php from:
-
-$out .= " <a href='$href'><img class='pwaimg' src='$thumb' alt='$caption' /></a>\n";
-
-to
-
-$out .= " <a href='$href' class='highslide-image' onclick=\"return hs.expand(this);\"><img class='pwaimg' src='$thumb' alt='$caption' /></a>\n";
+Install [Auto Highslide](http://wordpress.org/extend/plugins/auto-highslide/), it works as expected with PWA+PHP.
 
 = When I hover over an album, the detail overlay is either too big or too small. Why? =
 
@@ -65,6 +63,13 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 
 == Changelog ==
 
+= 0.5 =
+* New option allows for use of uncropped thumbnails
+* New "Overlay" display option, using CSS from [MyPHPDropBoxGallery](http://wiki.dropbox.com/DropboxAddons/MyPHPDropBoxGallery)
+* New option to specify [date format](http://php.net/manual/en/function.date.php) on album page
+* New option to hide videos in albums
+* Updated images per page option to allow any integer value
+
 = 0.4 =
 * New option allows for different size album and photo thumbnails
 * New options to set trim length for descriptions and captions via settings panel
@@ -79,7 +84,10 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 
 == Upgrade Notice ==
 
-= 0.4 -
+= 0.5 =
+* Support for uncropped thumbnails, new display option, new flexible date format, ability to hide videos
+
+= 0.4 =
 * New config option for setting the album thumbnail size, redesigned settings page and ability to set trim lengths on settings page
 
 = 0.3 =

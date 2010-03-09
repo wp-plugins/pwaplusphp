@@ -49,23 +49,24 @@ $STANDALONE_MODE="TRUE";
 
 $GDATA_TOKEN		= get_option("pwaplusphp_gdata_token");
 $PICASAWEB_USER	 	= get_option("pwaplusphp_picasa_username");
-$IMGMAX		 	= get_option("pwaplusphp_image_size","640");
-$GALLERY_THUMBSIZE 	= get_option("pwaplusphp_thumbnail_size",160);
+#$IMGMAX		 	= get_option("pwaplusphp_image_size","640");
+#$GALLERY_THUMBSIZE 	= get_option("pwaplusphp_thumbnail_size",160);
 $ALBUM_THUMBSIZE	= get_option("pwaplusphp_album_thumbsize",160);
 $REQUIRE_FILTER  	= get_option("pwaplusphp_require_filter","FALSE");
-$IMAGES_PER_PAGE 	= get_option("pwaplusphp_images_per_page",0);
+#$IMAGES_PER_PAGE 	= get_option("pwaplusphp_images_per_page",0);
 $PUBLIC_ONLY 	 	= get_option("pwaplusphp_public_only","TRUE");
 $SHOW_ALBUM_DETAILS  	= get_option("pwaplusphp_album_details","TRUE");
-$CHECK_FOR_UPDATES  	= get_option("pwaplusphp_updates","TRUE");
+#$CHECK_FOR_UPDATES  	= get_option("pwaplusphp_updates","TRUE");
 $SHOW_DROP_BOX	 	= get_option("pwaplusphp_show_dropbox","FALSE");
 $TRUNCATE_ALBUM_NAME  	= get_option("pwaplusphp_truncate_names","TRUE");
 $THIS_VERSION	 	= get_option("pwaplusphp_version");
 $SITE_LANGUAGE   	= get_option("pwaplusphp_language","en_us");
 $PERMIT_IMG_DOWNLOAD  	= get_option("pwaplusphp_permit_download","FALSE");
 $SHOW_FOOTER            = get_option("pwaplusphp_show_footer","FALSE");
-$SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
+#$SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
 $CAPTION_LENGTH         = get_option("pwaplusphp_caption_length","23");
 $DESCRIPTION_LENGTH     = get_option("pwaplusphp_description_length","120");
+$DATE_FORMAT		= get_option("pwaplusphp_date_format","Y-m-d");
 
 
 #-----------------------------------------------------------------------------------------
@@ -81,13 +82,14 @@ $TRUNCATE_TO   = $CAPTION_LENGTH - 3;   # Should be $TRUNCATE_FROM minus 3
 $DESCRIPTION_LENGTH_TO = $DESCRIPTION_LENGTH - 3;
 $OPEN=0;
 $TW20 = $ALBUM_THUMBSIZE + round($ALBUM_THUMBSIZE * .1);
+$TWM10 = $ALBUM_THUMBSIZE - 8;
 
 $overlay_class = "class = 'overlay'";
 
 #----------------------------------------------------------------------------
 # Check for required variables from config file
 #----------------------------------------------------------------------------
-if (!isset($GDATA_TOKEN, $PICASAWEB_USER, $IMGMAX, $GALLERY_THUMBSIZE, $USE_LIGHTBOX, $REQUIRE_FILTER, $STANDALONE_MODE, $IMAGES_PER_PAGE)) {
+if (!isset($GDATA_TOKEN, $PICASAWEB_USER, $ALBUM_THUMBSIZE, $USE_LIGHTBOX, $REQUIRE_FILTER, $STANDALONE_MODE)) {
 
         echo "<h1>" . $LANG_MISSING_VAR_H1 . "</h1><h3>" . $LANG_MISSING_VAR_H3 . "</h3>";
         exit;
@@ -154,10 +156,13 @@ foreach ($vals as $val) {
 			case "GPHOTO:LOCATION":
                                 $loc = trim($val["value"]);
                                 break;
-			case "PUBLISHED":
-                                $published = trim($val["value"]);
-				$published = substr($published,0,10);	
-                                break;
+			#case "PUBLISHED":
+                        #        $published = trim($val["value"]);
+			#	$published = substr($published,0,10);	
+                        #        break;
+			case "GPHOTO:TIMESTAMP":
+				$epoch = $val["value"];
+				break;
 			case "GPHOTO:ACCESS":
 				$access = trim($val["value"]);
 				if ($access == "protected") { $daccess = "Private"; }
@@ -173,7 +178,7 @@ foreach ($vals as $val) {
 	# Once we have all the pieces of info we want, dump the output
 	#----------------------------------------------------------------------------
 	
-	if (isset($thumb) && isset($title) && isset($href) && isset($num) && isset($published)) {
+	if (isset($thumb) && isset($title) && isset($href) && isset($num) && isset($epoch)) {
 		
 		if ($FILTER != "") {
 				$pos = strlen(strpos($title,$FILTER));
@@ -202,8 +207,8 @@ foreach ($vals as $val) {
                         }
                         $album_count++;
 			$total_images = $total_images + $num;
-                        $out .= "<div class='thumbnail' style='width: " . $TW20 . "px;'>\n";
-                        $out .= "<div class='thumbimage' style='width: " . $ALBUM_THUMBSIZE . "px;' id='album$album_count'>\n";
+                        $out .= "<div class='thumbnail' style='width: " . $TW20 . "px; float: left;'>\n";
+                        $out .= "<div class='thumbimage' style='width: " . $TWM10 . "px; float: left;'  id='album$album_count'>\n";
 			$uri = $_SERVER["REQUEST_URI"];
                    	if ( get_option('permalink_structure') != '' ) {
                         	# permalinks enabled
@@ -212,6 +217,9 @@ foreach ($vals as $val) {
                         	$urlchar = '&';
                    	}
 			$out .= "<a $overlay_class href=\"" . $_SERVER["REQUEST_URI"] . $urlchar . "album=$picasa_name\"><img class='pwaimg' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
+
+			$trim_epoch = substr($epoch,0,10);
+			$published = date($DATE_FORMAT, $trim_epoch);
 
 			# ------------------------------------------------
 			# Overlay album details on thumbnail if requested
@@ -233,8 +241,8 @@ foreach ($vals as $val) {
 			$out .= "</a>";
                         $out .= "</div>\n";
                         $out .= "<div class='galdata' style='$twstyle'>\n";
-                        $out .= "<p class='titlepg'><a class='album_link' href='" . $_SERVER["REQUEST_URI"] . $urlchar . "album=$picasa_name'>$disp_name</a></p>\n";
-                        $out .= "<p class='titlestats'>$published, $num $LANG_IMAGES</p>\n";
+                        $out .= "<a href='" . $_SERVER["REQUEST_URI"] . $urlchar . "album=$picasa_name'>$disp_name</a>\n";
+                        $out .= "<p style='padding-bottom: 15px;'>$published, $num $LANG_IMAGES</p>\n";
                         $out .= "</div>";
                         $out .= "</div>\n";
 
@@ -247,7 +255,7 @@ foreach ($vals as $val) {
 
         }
 }
-$out = "<div><span style='font-size: 18px; font-weight: bold;'>$FILTER $LANG_GALLERY</span><span style='font-size: 14px; color: #B0B0B0; margin-left: 10px;'>$total_images $LANG_PHOTOS_IN $album_count $LANG_ALBUMS</span></div>\n" . $out;
+$out = "<div style='padding-bottom: 20px'><span style='font-size: 18px; font-weight: bold;'>$FILTER $LANG_GALLERY</span><span style='font-size: 14px; color: #B0B0B0; margin-left: 10px;'>$total_images $LANG_PHOTOS_IN $album_count $LANG_ALBUMS</span></div>\n" . $out;
 if ($SHOW_FOOTER == "TRUE") {
 	$out .= "<div id='pwafooter' style='padding-top: 75px;'>$LANG_GENERATED <a href='http://code.google.com/p/pwaplusphp/'>PWA+PHP</a> v" . $THIS_VERSION . ".</div>";
 }
@@ -272,21 +280,23 @@ $GDATA_TOKEN            = get_option("pwaplusphp_gdata_token");
 $PICASAWEB_USER         = get_option("pwaplusphp_picasa_username");
 $IMGMAX                 = get_option("pwaplusphp_image_size","640");
 $GALLERY_THUMBSIZE      = get_option("pwaplusphp_thumbnail_size",160);
-$ALBUM_THUMBSIZE	= get_option("pwaplusphp_album_thumbsize",160);
+#$ALBUM_THUMBSIZE	= get_option("pwaplusphp_album_thumbsize",160);
 $REQUIRE_FILTER         = get_option("pwaplusphp_require_filter","FALSE");
 $IMAGES_PER_PAGE        = get_option("pwaplusphp_images_per_page",0);
-$PUBLIC_ONLY            = get_option("pwaplusphp_public_only","TRUE");
-$SHOW_ALBUM_DETAILS     = get_option("pwaplusphp_album_details","TRUE");
-$CHECK_FOR_UPDATES      = get_option("pwaplusphp_updates","TRUE");
-$SHOW_DROP_BOX          = get_option("pwaplusphp_show_dropbox","FALSE");
+#$PUBLIC_ONLY            = get_option("pwaplusphp_public_only","TRUE");
+#$SHOW_ALBUM_DETAILS     = get_option("pwaplusphp_album_details","TRUE");
+#$CHECK_FOR_UPDATES      = get_option("pwaplusphp_updates","TRUE");
+#$SHOW_DROP_BOX          = get_option("pwaplusphp_show_dropbox","FALSE");
 $TRUNCATE_ALBUM_NAME    = get_option("pwaplusphp_truncate_names","TRUE");
-$THIS_VERSION           = get_option("pwaplusphp_version");
+#$THIS_VERSION           = get_option("pwaplusphp_version");
 $SITE_LANGUAGE          = get_option("pwaplusphp_language","en_us");
 $PERMIT_IMG_DOWNLOAD    = get_option("pwaplusphp_permit_download","FALSE");
 $SHOW_FOOTER		= get_option("pwaplusphp_show_footer","FALSE");
 $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
 $CAPTION_LENGTH         = get_option("pwaplusphp_caption_length","23");
-$DESCRIPTION_LENGTH     = get_option("pwaplusphp_description_length","120");
+#$DESCRIPTION_LENGTH     = get_option("pwaplusphp_description_length","120");
+$CROP_THUMBNAILS	= get_option("pwaplusphp_crop_thumbs","TRUE");
+$HIDE_VIDEO		= get_option("pwaplusphp_hide_video","FALSE");
 
 #-----------------------------------------------------------------------------------------
 # Load Language File
@@ -297,8 +307,18 @@ require_once(dirname(__FILE__)."/lang/$SITE_LANGUAGE.php");
 # CONFIGURATION
 #----------------------------------------------------------------------------
 $TZ10 = $GALLERY_THUMBSIZE + round($GALLERY_THUMBSIZE * .06);
+$TZ20 = $GALLERY_THUMBSIZE + round($GALLERY_THUMBSIZE * .15);
+$TZ30 = $GALLERY_THUMBSIZE + round($GALLERY_THUMBSIZE * .25);
 $TZM10 = $GALLERY_THUMBSIZE - round($GALLERY_THUMBSIZE * .06);
 $TZM20 = $GALLERY_THUMBSIZE - round($GALLERY_THUMBSIZE * .09);
+$TZM2 = $GALLERY_THUMBSIZE - 2;
+$TZM2W = $GALLERY_THUMBSIZE - 2;
+$TZM2H = $GALLERY_THUMBSIZE - 2;
+$TZM2M10 = $TZM2 - 10;
+$TZM2M10W = $TZM2W - 10;
+$TZM2M10H = $TZM2H - 10;
+$twid = $GALLERY_THUMBSIZE;
+$thei = $GALLERY_THUMBSIZE;
 
 $uri = $_SERVER["REQUEST_URI"];
 $useragent = $_SERVER['HTTP_USER_AGENT']; # Check useragent to suppress hover for IE6
@@ -325,7 +345,7 @@ list($ALBUM_TITLE,$tags) = split('_',$ALBUM);
 #----------------------------------------------------------------------------
 # Check for required variables from config file
 #----------------------------------------------------------------------------
-if (!isset($GDATA_TOKEN, $PICASAWEB_USER, $IMGMAX, $ALBUM_THUMBSIZE, $USE_LIGHTBOX, $REQUIRE_FILTER, $STANDALONE_MODE, $IMAGES_PER_PAGE)) {
+if (!isset($GDATA_TOKEN, $PICASAWEB_USER, $IMGMAX, $GALLERY_THUMBSIZE, $USE_LIGHTBOX, $REQUIRE_FILTER, $STANDALONE_MODE, $IMAGES_PER_PAGE)) {
 
 	echo "<h1>" . $LANG_MISSING_VAR_H1 . "</h1><h3>" . $LANG_MISSING_VAR_H3 . "</h3>";
 	exit;
@@ -340,9 +360,12 @@ if ($IN_POST == "TRUE") {
         $IMAGES_PER_PAGE = 0;
 }
 
+if ($CROP_THUMBNAILS == "TRUE") { $CROP_CHAR = "c"; }
+else { $CROP_CHAR = "u"; }
+
 if ($IMAGES_PER_PAGE == 0) {
 
-	$file = "http://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER . "/album/" . $ALBUM . "?kind=photo&thumbsize=" . $GALLERY_THUMBSIZE . "c&imgmax=" . $IMGMAX;
+	$file = "http://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER . "/album/" . $ALBUM . "?kind=photo&thumbsize=" . $GALLERY_THUMBSIZE . $CROP_CHAR . "&imgmax=" . $IMGMAX;
 
 } else {
 
@@ -356,7 +379,7 @@ if ($IMAGES_PER_PAGE == 0) {
 		$start_image_index = 1;
 	}
 
-	$file = "http://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER . "/album/" . $ALBUM . "?kind=photo&thumbsize=" . $GALLERY_THUMBSIZE . "c&imgmax=" . $IMGMAX . "&max-results=" . $IMAGES_PER_PAGE . "&start-index=" . $start_image_index;
+	$file = "http://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER . "/album/" . $ALBUM . "?kind=photo&thumbsize=" . $GALLERY_THUMBSIZE . $CROP_CHAR . "&imgmax=" . $IMGMAX . "&max-results=" . $IMAGES_PER_PAGE . "&start-index=" . $start_image_index;
 
 }
 $vals = doCurlExec($file);
@@ -405,6 +428,12 @@ foreach ($vals as $val) {
                                 break;
                         case "MEDIA:THUMBNAIL":
                                 $thumb = trim($val["attributes"]["URL"] . "\n");
+				$twid  = $val["attributes"]["WIDTH"];
+				$thei  = $val["attributes"]["HEIGHT"];
+				$TZM2W = $twid - 2;
+				$TZM2H = $thei - 2;
+				$TZM2M10W = $TZM2W - 10;
+				$TZM2M10H = $TZM2H - 10;
                                 break;
                         case "MEDIA:CONTENT":
                                 $href = $val["attributes"]["URL"];
@@ -435,7 +464,7 @@ foreach ($vals as $val) {
 			$AT = str_replace("\"", "", $AT);
                         $AT = str_replace("'", "",$AT);
 			if ($IN_POST != "TRUE") {
-                                $out .= "<div id='title'><h2>$AT</h2></div><p><a class='back_to_list' href='" . $back_link . "'>...$LANG_BACK</a></p>\n";
+                                $out .= "<div id='title'><h2>$AT</h2></div><p style='padding-bottom: 10px;'><a class='back_to_list' href='" . $back_link . "'>...$LANG_BACK</a></p>\n";
                         }
                         $STOP_FLAG=1;
                 }
@@ -444,7 +473,11 @@ foreach ($vals as $val) {
                 if ($text != "") {
                         #$text = addslashes($text);
                         $caption = $text;
+			$text_header = substr($caption,0,7);
+                        if ($text_header == "(video)") { $IS_VIDEO = "TRUE"; }
+                        else { $IS_VIDEO = "FALSE"; }
                 } else {
+			$IS_VIDEO="FALSE";
                         $caption = $AT . " - " . $filename;
                 }
 		
@@ -453,40 +486,74 @@ foreach ($vals as $val) {
 
 		# Shorten caption as necessary
                 if ((strlen($caption) > $TRUNCATE_FROM) && ($TRUNCATE_ALBUM_NAME == "TRUE")) {
-                        if ($text != "") {
-                                $short_caption = substr($caption,0,$TRUNCATE_TO) . "...";
-                        } else {
-                                $short_caption = $filename;
-                        }
+                        $short_caption = substr($caption,0,$TRUNCATE_TO) . "...";
+			if (strlen($short_caption) > $TRUNCATE_FROM) {
+				$short_caption = substr($filename,0,$TRUNCATE_FROM);
+			}
                 } else {
 			$short_caption = $caption;
 		}
 
-		$out .= "<div class='thumbnail' style='width: " . $TZ10 . "px;'>\n";
-                $out .= " <a href='$href'><img class='pwaimg' src='$thumb' alt='$caption' /></a>\n";
+		# CASE: CAPTION = OVERLAY
+		if (($IS_VIDEO == "FALSE") || ($HIDE_VIDEO == "FALSE")) {
 
-                # Show Caption on Hover
-                if (($SHOW_IMG_CAPTION == "HOVER") && ($USING_IE_6 != "TRUE")){
+		   if ($SHOW_IMG_CAPTION == "OVERLAY") {
 
-                        $out .= " <div id='options' style='width:" . $TZ10 . "px'>\n";
+			$out .= "<p class='blocPhoto' style='width: " . $GALLERY_THUMBSIZE . "px; height: " . $GALLERY_THUMBSIZE . "px; padding-right: 10px;'>";
+
+                        if ($PERMIT_IMG_DOWNLOAD == "TRUE") {
+                                $out .= "<a class='dl_link' href='$filename' title='Download: $filename'><img src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' alt='' /></a>";
+                        }
+
+                        $out .= "<a style=\"width: " . $TZM2W . "px; height: " . $TZM2H . "px; background-image: url('$thumb');\" class='photo' title='$caption' href='$href'>";
+                        $out .= "<span class='border' style='width: " . $TZM2M10W . "px; height: " . $TZM2M10H . "px;'>";
+                        $out .= "<span class='title' style='width: " . $TZM2M10W . "px; color: #FFF;'><span>$short_caption</span></span>";
+                        $out .= "</span> ";
+                        $out .= "</a>";
+                        $out .= "</p>";
+
+		   # CASE: CAPTION = HOVER & IE6 = TRUE
+                   } else if (($SHOW_IMG_CAPTION == "HOVER") && ($USING_IE_6 != "TRUE")){
+
+			# ONLY WANT HEIGHT IF NON-CROPPED THUMBNAILS
+			$out .= "<div class='thumbnail' style='width: " . $TZ10 . "px; ";
+
+			if ($CROP_THUMBNAILS == "FALSE") {
+                                $out .= "height: " . $TZ30 . "px; ";
+                        }
+
+			$out .= "text-align: center;'>\n";
+                        $out .= " <a href='$href' alt='$caption'><img class='pwaimg' src='$thumb' alt='$caption' /></a>\n";
+                        $out .= " <div id='options' style='width:" . $TZ10 . "px;'>\n";
                         $out .= "  <span style='padding-top: 3px;'>$short_caption</span>\n";
 
                         # Download Icon
                         $download_div  = "<span style='margin-left: " . $TZM20 . "px; padding-top: 3px;'>\n";
-                        $download_div .= "<a 'Save $filename' title='Save $filename' href='$orig_href'>\n";
+                        $download_div .= "<a rel='shadowbox[post-0000];player=img;' Save $filename' title='Save $filename' href='$orig_href'>\n";
                         $download_div .= "<img border=0 style='padding-left: 5px;' src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' />\n";
                         $download_div .= "</a></span>\n";
 
-			# Show Download Icon
+                        # Show Download Icon
                         if ($PERMIT_IMG_DOWNLOAD == "TRUE") {
                                 $out .= $download_div;
                         }
                         $out .= "</div>\n";
+                        $out .= "</div>";
 
-                } else if (($SHOW_IMG_CAPTION == "ALWAYS") || (($SHOW_IMG_CAPTION == "HOVER") && ($USING_IE_6 == "TRUE"))){
+		   # CASE: CAPTION = ALWAYS && DOWNLOAD = TRUE
+		   #       CAPTION = HOVER & IE6 = TRUE 
+                   } else if ((($SHOW_IMG_CAPTION == "ALWAYS") && ($PERMIT_IMG_DOWNLOAD == "TRUE")) || (($SHOW_IMG_CAPTION == "HOVER") && ($USING_IE_6 == "TRUE"))){
 
-                        $out .= " <div style='width:" . $TZ10 . "px'>\n";
-                        $out .= "  <span style='float: left; padding-top: 3px;'>$short_caption</span>\n";
+			# ONLY WANT HEIGHT IF NON-CROPPED THUMBNAILS
+                        $out .= " <div class='thumbnail' style='width:" . $TZ10 . "px; ";
+
+			if ($CROP_THUMBNAILS == "FALSE") {
+				$out .= "height: " . $TZ30 . "px; ";
+			}
+
+			$out .= "text-align: center; padding-bottom: 10px;'>\n";
+			$out .= " <a href='$href alt='$caption'><img class='pwaimg' src='$thumb' alt='$caption' /></a>\n";
+                        $out .= "  <span style='float: left; padding-top: 3px; font-size: 10px;'>$short_caption</span>\n";
 
                         # Download Icon
                         $download_div  = "<span style='float: right; padding-top: 3px;'>\n";
@@ -499,9 +566,28 @@ foreach ($vals as $val) {
                         	$out .= $download_div;
                 	}
 			$out .= "</div>\n";
-                }
 
-                $out .= "</div>\n";
+		   # CASE: CAPTION = NEVER, OR
+		   #       CAPTION = ALWAYS & DOWNLOAD = FALSE
+		   } else {
+
+			$out .= "<p class='pwathumb' style='float: left; width: " . $TZ20 . "px; ";
+
+			if ($CROP_THUMBNAILS == "FALSE") {
+                                $out .= "height: " . $TZ30 . "px; ";
+			}
+
+			$out .= "padding-right: 10px;'><span style='font-size: 11px;'>";
+                        
+			$out .= "<a href='$href' alt='$caption'><img style='padding: 5px; margin-bottom: 5px; background: #F1F1F1; border: 1px solid #CCC;' src='$thumb' /></a>";
+			if ($SHOW_IMG_CAPTION == "ALWAYS") {
+				$out .= "<br />$short_caption";
+			}
+		 	$out .= "</span></p>";
+                   }
+		}
+
+                #$out .= "</div>\n";
 
                 #----------------------------------
                 # Reset the variables
@@ -545,7 +631,7 @@ foreach ($vals as $val) {
 
 		  # Show current page
 		  if ($i == $page) {
-			$out .= "<span class='current_page'>$i </span>";
+			$out .= "<strong>$i </strong>";
 		   } else {
 			$out .= "<a class='page_link' href='$href'>$i</a> ";
 		   }
@@ -593,6 +679,9 @@ function pwaplusphp_remove() {
 	delete_option("pwaplusphp_permit_download");
 	delete_option("pwaplusphp_description_length");
 	delete_option("pwaplusphp_caption_length");
+	delete_option("pwaplusphp_date_format");
+	delete_option("pwaplusphp_crop_thumbs");
+	delete_option("pwaplusphp_hide_video");
 
 }
 
