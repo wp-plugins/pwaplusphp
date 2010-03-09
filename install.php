@@ -369,7 +369,7 @@ function set_gdata_token() {
 
 function set_options() {
 
-	$THIS_VERSION = "0.4";
+	$THIS_VERSION = "0.5";
 
 	update_option("pwaplusphp_picasa_username", $_POST['pwaplusphp_picasa_username']);
 	update_option("pwaplusphp_image_size",$_POST['pwaplusphp_image_size']);
