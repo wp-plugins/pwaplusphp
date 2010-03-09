@@ -240,7 +240,7 @@ foreach ($vals as $val) {
                         }	
 			$out .= "</a>";
                         $out .= "</div>\n";
-                        $out .= "<div class='galdata' style='$twstyle'>\n";
+			$out .= "<div class='galdata' style='$twstyle; float:left;'>\n";
                         $out .= "<a href='" . $_SERVER["REQUEST_URI"] . $urlchar . "album=$picasa_name'>$disp_name</a>\n";
                         $out .= "<p style='padding-bottom: 15px;'>$published, $num $LANG_IMAGES</p>\n";
                         $out .= "</div>";
