@@ -67,7 +67,6 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 * New option allows for use of uncropped thumbnails
 * New "Overlay" display option, using CSS from [MyPHPDropBoxGallery](http://wiki.dropbox.com/DropboxAddons/MyPHPDropBoxGallery)
 * New option to specify [date format](http://php.net/manual/en/function.date.php) on album page
-* New option to hide videos in albums
 * Updated images per page option to allow any integer value
 
 = 0.4 =
