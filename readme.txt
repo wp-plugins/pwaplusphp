@@ -107,3 +107,16 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 * Interface configuration via [16 variables](http://code.google.com/p/pwaplusphp/wiki/ConfigurationOptions) (image size, thumbnail size, pagination, etc)
 * Modify included CSS file to match your site exactly
 * Available in 8 languages and extensible to others!
+
+== Coming Soon: Pro Version Features ==
+
+* Comments
+* - Show photo's comments in Shadowbox
+* - Add comments to a photo
+* - Show recent comments in widget
+* Cache Thumbnails
+* - Save thumbnails on server for faster page loads
+* Album Cover Shortcode
+* - Show album cover thumbnail in a post instead of album contents
+* Hide Video
+* - Option to suppress display of video thumbnails
