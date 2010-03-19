@@ -113,4 +113,5 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 * Comments: Show photo's comments in Shadowbox, allow users to add comments to photos, and show recent comments in widget
 * Cache Thumbnails: Save thumbnails on server for faster page loads
 * Album Cover Shortcode: Show album cover thumbnail in a post instead of album contents
+* Random Album Shortcode: Show random album, instead of random photo
 * Hide Video: Option to suppress display of video thumbnails

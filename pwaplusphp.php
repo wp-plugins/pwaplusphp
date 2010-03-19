@@ -473,31 +473,29 @@ foreach ($vals as $val) {
                 if ($text != "") {
                         #$text = addslashes($text);
                         $caption = $text;
-			$text_header = substr($caption,0,7);
-                        if ($text_header == "(video)") { $IS_VIDEO = "TRUE"; }
-                        else { $IS_VIDEO = "FALSE"; }
                 } else {
-			$IS_VIDEO="FALSE";
                         $caption = $AT . " - " . $filename;
                 }
-		
-		# Keep count of images
+                # Keep count of images
                 $count++;
 
-		# Shorten caption as necessary
+                # Shorten caption as necessary
                 if ((strlen($caption) > $TRUNCATE_FROM) && ($TRUNCATE_ALBUM_NAME == "TRUE")) {
                         $short_caption = substr($caption,0,$TRUNCATE_TO) . "...";
-			if (strlen($short_caption) > $TRUNCATE_FROM) {
-				$short_caption = substr($filename,0,$TRUNCATE_FROM);
-			}
+                        if (strlen($short_caption) > $TRUNCATE_FROM) {
+                                $short_caption = substr($filename,0,$TRUNCATE_FROM);
+                        }
                 } else {
-			$short_caption = $caption;
-		}
+                        $short_caption = $caption;
+                }
 
-		# CASE: CAPTION = OVERLAY
-		if (($IS_VIDEO == "FALSE") || ($HIDE_VIDEO == "FALSE")) {
+                # Hide Videos
+                $vidpos = stripos($href, "googlevideo");
 
-		   if ($SHOW_IMG_CAPTION == "OVERLAY") {
+                if (($vidpos == "") || ($HIDE_VIDEO == "FALSE")) {
+
+                   # CASE: CAPTION = OVERLAY
+                   if ($SHOW_IMG_CAPTION == "OVERLAY") {
 
 			$out .= "<p class='blocPhoto' style='width: " . $GALLERY_THUMBSIZE . "px; height: " . $GALLERY_THUMBSIZE . "px; padding-right: 10px;'>";
 
