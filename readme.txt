@@ -68,6 +68,7 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 * Slick new settings page with WP look and feel
 * Option to upgrade to Pro Version for comments, caching and new shortcodes
 * Fixed broken v0.5 Hide Video Option
+* Added ability to regenerate gdata token w/o remove re-add
 
 = 0.5 =
 * New option allows for use of uncropped thumbnails
