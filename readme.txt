@@ -1,7 +1,7 @@
 === Plugin Name ===
 Contributors: smccandl 
 Donate link: http://pwaplusphp.smccandl.net/
-Tags: picasa, picasa web albums, pwa, lightbox, fancybox, shadowbox, highslide
+Tags: picasa, picasa web albums, pwa, lightbox, fancybox, shadowbox, highslide, picasa comments
 Requires at least: 2.9.1
 Tested up to: 2.9.2
 Stable tag: trunk
@@ -59,9 +59,15 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 2. View of images in album
 3. Full-size image in a Shadowbox
 4. Settings page
-5. Caption display on mouse over
+5. Hover display option 
+6. Overlay display option
 
 == Changelog ==
+
+= 0.6 =
+* Slick new settings page with WP look and feel
+* Option to upgrade to Pro Version for comments, caching and new shortcodes
+* Fixed broken v0.5 Hide Video Option
 
 = 0.5 =
 * New option allows for use of uncropped thumbnails
@@ -83,6 +89,9 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 
 == Upgrade Notice ==
 
+= 0.6 =
+* New settings page, fixed broken Hide Video option, new Pro version upgrade available
+
 = 0.5 =
 * Support for uncropped thumbnails, new display option, new flexible date format, ability to hide videos
 
@@ -95,20 +104,20 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 = 0.2 =
 * Initial release.
 
-== Features ==
+== Basic Version Features ==
 
 * Embed all your public, private and unlisted Picasa web albums on any website
 * Group and filter albums [using keywords](http://code.google.com/p/pwaplusphp/wiki/Album_Filtering) in the album title
 * Uploaded images via email, web interface or desktop app and see them instantly
 * Display image totals for the entire gallery and by album
-* Configure caption settings with 3 settings
+* Configure caption settings with 4 options
 * Allow users to download full-size copies of your images
 * Install script guides setup and token generation for private albums
 * Interface configuration via [16 variables](http://code.google.com/p/pwaplusphp/wiki/ConfigurationOptions) (image size, thumbnail size, pagination, etc)
 * Modify included CSS file to match your site exactly
 * Available in 8 languages and extensible to others!
 
-== Coming Soon: Pro Version Features ==
+== Additional Pro Version Features ==
 
 * Comments: Show photo's comments in Shadowbox, allow users to add comments to photos, and show recent comments in widget
 * Cache Thumbnails: Save thumbnails on server for faster page loads
