@@ -497,6 +497,7 @@ if ($loc == "gdata") {
 
 #}
 
+global $THIS_VERSION;
 echo "</td><td width='25%' valign=top style='padding-top: 70px;'>";
 
 echo "<table class='widefat' width='100%'>";
