@@ -500,10 +500,10 @@ foreach ($vals as $val) {
 			$out .= "<p class='blocPhoto' style='width: " . $GALLERY_THUMBSIZE . "px; height: " . $GALLERY_THUMBSIZE . "px; padding-right: 10px;'>";
 
                         if ($PERMIT_IMG_DOWNLOAD == "TRUE") {
-                                $out .= "<a class='dl_link' href='$filename' title='Download: $filename'><img src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' alt='' /></a>";
+                                $out .= "<a class='dl_link' href='$filename' title='Download: $filename'><img src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' /></a>";
                         }
 
-                        $out .= "<a style=\"width: " . $TZM2W . "px; height: " . $TZM2H . "px; background-image: url('$thumb');\" class='photo' title='$caption' href='$href'>";
+                        $out .= "<a style=\"width: " . $TZM2W . "px; height: " . $TZM2H . "px; background-image: url('$thumb');\" class='photo' title='$caption' href='$href' alt='$caption'>";
                         $out .= "<span class='border' style='width: " . $TZM2M10W . "px; height: " . $TZM2M10H . "px;'>";
                         $out .= "<span class='title' style='width: " . $TZM2M10W . "px; color: #FFF;'><span>$short_caption</span></span>";
                         $out .= "</span> ";
@@ -521,7 +521,7 @@ foreach ($vals as $val) {
                         }
 
 			$out .= "text-align: center;'>\n";
-                        $out .= " <a href='$href' alt='$caption'><img class='pwaimg' src='$thumb' alt='$caption' /></a>\n";
+                        $out .= " <a href='$href' alt='$caption' title='$caption'><img class='pwaimg' src='$thumb' alt='$caption' /></a>\n";
                         $out .= " <div id='options' style='width:" . $TZ10 . "px;'>\n";
                         $out .= "  <span style='padding-top: 3px;'>$short_caption</span>\n";
 
@@ -550,7 +550,7 @@ foreach ($vals as $val) {
 			}
 
 			$out .= "text-align: center; padding-bottom: 10px;'>\n";
-			$out .= " <a href='$href alt='$caption'><img class='pwaimg' src='$thumb' alt='$caption' /></a>\n";
+			$out .= " <a href='$href alt='$caption' title='$caption'><img class='pwaimg' src='$thumb' alt='$caption' /></a>\n";
                         $out .= "  <span style='float: left; padding-top: 3px; font-size: 10px;'>$short_caption</span>\n";
 
                         # Download Icon
@@ -577,7 +577,7 @@ foreach ($vals as $val) {
 
 			$out .= "padding-right: 10px;'><span style='font-size: 11px;'>";
                         
-			$out .= "<a href='$href' alt='$caption'><img style='padding: 5px; margin-bottom: 5px; background: #F1F1F1; border: 1px solid #CCC;' src='$thumb' /></a>";
+			$out .= "<a href='$href' alt='$caption' title='$caption'><img style='padding: 5px; margin-bottom: 5px; background: #F1F1F1; border: 1px solid #CCC;' src='$thumb' /></a>";
 			if ($SHOW_IMG_CAPTION == "ALWAYS") {
 				$out .= "<br />$short_caption";
 			}
