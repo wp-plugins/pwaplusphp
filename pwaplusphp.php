@@ -268,7 +268,7 @@ if ($SHOW_FOOTER == "TRUE") {
 	#$out .= "</div>" . "\n";
 #   }
 
-$out .= "<div style='float: left' />"; # Ensure PWA+PHP doesn't break theme layout
+$out .= "<div style='clear: both'></div>"; # Ensure PWA+PHP doesn't break theme layout
 return $out;
 }
 
@@ -646,7 +646,7 @@ foreach ($vals as $val) {
 	#
 	#}
 
-	$out .= "<div style='float: left' />"; # Ensure PWA+PHP doesn't break theme layout
+	$out .= "<div style='clear: both'></div>"; # Ensure PWA+PHP doesn't break theme layout
 	return($out);
 
 }
