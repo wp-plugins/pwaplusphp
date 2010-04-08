@@ -3,6 +3,7 @@ global $PRO_VERSION;
 global $THIS_VERSION;
 $PRO_VERSION = "FALSE";		# Changing this only affects the installer and won't enable PRO features.
 echo "<div class='wrap'>";
+
 echo "<table cellspacing=20><tr><td width='75%' valign=top>";
 
 #==============================================================================================
@@ -145,7 +146,7 @@ if ($PRO_VERSION == "FALSE") {
         echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Main Photo Page</strong></td><td valign=top style='padding-top: 7px;'>";
         if ($PRO_VERSION == "TRUE") { wp_dropdown_pages($args); }
         echo "</td><td valign=top style='$disabled_color padding-top: 7px;'><i>Create a page with [pwaplusphp] and select it. Required for album cover shortcode.</i></td></tr>";
-	#--------------------------
+        #--------------------------
 	echo "<tfoot><tr><th valign=top colspan=3></th></tr></tfoot>\n";
 	echo "</table>";	
         # -------
@@ -426,7 +427,7 @@ function set_gdata_token() {
 
 function set_options() {
 
-	$THIS_VERSION = "0.6";
+	$THIS_VERSION = "0.7";
 
 	update_option("pwaplusphp_picasa_username", $_POST['pwaplusphp_picasa_username']);
 	update_option("pwaplusphp_image_size",$_POST['pwaplusphp_image_size']);
@@ -502,18 +503,18 @@ echo "</td><td width='25%' valign=top style='padding-top: 70px;'>";
 
 echo "<table class='widefat' width='100%'>";
 echo "<thead><tr><th valign=top colspan=3>Help & Support</th></tr></thead>\n";
-echo "<tr><td>Support is available in a number of places.  You can get lots of good information <a href='http://code.google.com/p/pwaplusphp/w/list' target='_BLANK'>on the wiki</a> and our <a href='http://groups.google.com/group/pwaplusphp' target='_BLANK'>discussion group</a> is a good place to ask questions. You can also submit and review <a href='http://code.google.com/p/pwaplusphp/issues/entry?template=Defect%20report%20from%20user' target='_BLANK'>Bug Reports</a> and <a href='http://code.google.com/p/pwaplusphp/issues/entry?template=Enhancement%20Request' target='_BLANK'>Enhancement Requests</a> on the <a href='http://code.google.com/p/pwaplusphp/issues/list' target='_BLANK'>Issues Page</a>.</td></tr>";
+echo "<tr><td>Support is available <a href='http://code.google.com/p/pwaplusphp/w/list' target='_BLANK'>on the wiki</a> and our <a href='http://groups.google.com/group/pwaplusphp' target='_BLANK'>discussion group</a> is a good place to ask questions. You can also submit and review <a href='http://code.google.com/p/pwaplusphp/issues/entry?template=Defect%20report%20from%20user' target='_BLANK'>Bug Reports</a> and <a href='http://code.google.com/p/pwaplusphp/issues/entry?template=Enhancement%20Request' target='_BLANK'>Enhancement Requests</a> on the <a href='http://code.google.com/p/pwaplusphp/issues/list' target='_BLANK'>Issues Page</a>.</td></tr>";
 echo "<tfoot><tr><th valign=top colspan=3></th></tr></tfoot>\n";
 echo "</table>";
 echo "<br />";
 echo "<table class='widefat' width='100%'>";
 if ($PRO_VERSION == "TRUE") {
+	$pro_version_msg = check_for_updates($THIS_VERSION);
 	$pv = "Pro";
-	$pro_version_msg = "Thanks for your donation!";
 	$pro_title = "You are using PWA+PHP Pro";
 } else {
 	$pv = "Basic";
-	$pro_version_msg = "The Pro Version of PWA+PHP offers advanced features including: support for comments, thumbnail caching for faster page loads and several additional short codes for new functionality.";
+	$pro_version_msg = "The <a href='http://pwaplusphp.smccandl.net/pro/' target='_BLANK'>Pro Version</a> offers advanced features including: support for comments, thumbnail caching for faster page loads and additional short codes for new functionality.";
 	$pro_version_msg .= "<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\">";
 $pro_version_msg .= "<input type=\"hidden\" name=\"cmd\" value=\"_s-xclick\">";
 $pro_version_msg .= "<input type=\"hidden\" name=\"encrypted\" value=\"-----BEGIN PKCS7-----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-----END PKCS7-----\">";
@@ -539,7 +540,7 @@ if ($PRO_VERSION == "TRUE") {
 echo "<table class='widefat' width='100%'>";
 echo "<thead><tr><th valign=top colspan=3>Server Information</th></tr></thead>\n";
 echo "<tr><td>";
-echo "<table cellspacing=0>";
+echo "<table cellspacing=0 width='100%'>";
 echo "<tr><th>PWA+PHP</th><td>v" . $THIS_VERSION . " $pv</td></tr>";
 echo "<tr><th>Hostname</th><td>" . $_SERVER['SERVER_NAME'] . "</td></tr>";
 list($ws,$os) = split(' ',$_SERVER['SERVER_SOFTWARE']);

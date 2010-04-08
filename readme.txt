@@ -1,7 +1,7 @@
 === Plugin Name ===
 Contributors: smccandl 
 Donate link: http://pwaplusphp.smccandl.net/
-Tags: picasa, picasa web albums, pwa, lightbox, fancybox, shadowbox, highslide, picasa comments
+Tags: picasa, picasa web albums, pwa, lightbox, fancybox, shadowbox, highslide, picasa comments, wptouch
 Requires at least: 2.9.1
 Tested up to: 2.9.2
 Stable tag: trunk
@@ -64,6 +64,15 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 
 == Changelog ==
 
+= 0.7 =
+* Display tweaks for enhanced compatibility with WPtouch iPhone Theme in mobile browsers
+* Fixed display bug with Overlay caption mode in Firefox
+* Fixed Language variable issue in album cover shortcode when used in sidebar
+* Fixed several layout issues for better theme compatibility
+* Moved some remaining CSS in PHP files to CSS file for easier customization
+* Pro version: Added links to full image in recent comments block
+* Pro version: Fixed bug with comment image display
+
 = 0.6 =
 * Slick new settings page with WP look and feel
 * Option to upgrade to Pro Version for comments, caching and new shortcodes
@@ -89,6 +98,8 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 * Alpha version - initial release.
 
 == Upgrade Notice ==
+= 0.7 =
+* Improved WPtouch compatibility, various display-related bug fixes
 
 = 0.6 =
 * New settings page, fixed broken Hide Video option, new Pro version upgrade available
@@ -117,6 +128,8 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 * Interface configuration via [16 variables](http://code.google.com/p/pwaplusphp/wiki/ConfigurationOptions) (image size, thumbnail size, pagination, etc)
 * Modify included CSS file to match your site exactly
 * Available in 8 languages and extensible to others!
+* Hide Video: Option to suppress display of video thumbnails
+* Improved compatibility with WPtouch iPhone theme in v0.7
 
 == Additional Pro Version Features ==
 
@@ -124,4 +137,3 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 * Cache Thumbnails: Save thumbnails on server for faster page loads
 * Album Cover Shortcode: Show album cover thumbnail in a post instead of album contents
 * Random Album Shortcode: Show random album, instead of random photo
-* Hide Video: Option to suppress display of video thumbnails
