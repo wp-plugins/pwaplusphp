@@ -259,7 +259,7 @@ foreach ($vals as $val) {
    if ( ($FILTER != "RANDOM") && (strtoupper($COVER) != "TRUE")) {
 	$header = "<div id='pwaheader'>";
 	if ($wptouch_plugin->applemobile != "1") {
-		$header .= "<span class='lang_gallery'>$FILTER $LANG_GALLERY</span>";
+		$header .= "<h2>$FILTER $LANG_GALLERY</h2>";
 		$header .= "<span class='total_images'>$total_images $LANG_PHOTOS_IN $album_count $LANG_ALBUMS</span></div>\n";
 	} else { 
                 $header .= "<span class='total_images_wpt'>$total_images $LANG_PHOTOS_IN $album_count $LANG_ALBUMS</span></div>\n";
