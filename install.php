@@ -390,7 +390,7 @@ echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Truncat
 function exchangeToken($single_use_token) {
 
 
-        $ch = curl_init("http://www.google.com/accounts/AuthSubSessionToken");
+        $ch = curl_init("https://www.google.com/accounts/AuthSubSessionToken");
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FAILONERROR, true);
