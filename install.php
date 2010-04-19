@@ -389,7 +389,6 @@ echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Truncat
 
 function exchangeToken($single_use_token) {
 
-        $exchange_success = 1;
 
         $ch = curl_init("http://www.google.com/accounts/AuthSubSessionToken");
 
@@ -407,7 +406,6 @@ function exchangeToken($single_use_token) {
 
                 echo "<p><strong>Error: Could not generate session token! Exiting...</strong></p>";
                 die ('Curl error: ' . curl_error($ch));
-                $exchange_success = 0;
 
         }
         curl_close($ch);
