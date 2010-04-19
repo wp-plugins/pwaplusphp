@@ -389,7 +389,9 @@ echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Truncat
 
 function exchangeToken($single_use_token) {
 
-        $ch = curl_init("https://www.google.com/accounts/AuthSubSessionToken");
+        $exchange_success = 1;
+
+        $ch = curl_init("http://www.google.com/accounts/AuthSubSessionToken");
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FAILONERROR, true);
@@ -400,11 +402,23 @@ function exchangeToken($single_use_token) {
 
         $result = curl_exec($ch);  /* Execute the HTTP command. */
 
-        curl_close($ch);
+        # See if there has been a curl error
+        if(curl_errno($ch)) {
 
+                echo "<p><strong>Error: Could not generate session token! Exiting...</strong></p>";
+                die ('Curl error: ' . curl_error($ch));
+                $exchange_success = 0;
+
+        }
+        curl_close($ch);
         $splitStr = split("=", $result);
 
-        return trim($splitStr[1]);
+        if (strlen($splitStr[1]) > 14) {
+                return trim($splitStr[1]);
+        } else {
+                echo "<p><strong>Error: Could not generate session token! Exiting...</strong></p>";
+                die('Unexpected value returned to exchangeToken(): ' . $splitStr[1]);
+        }
 
 }
 
