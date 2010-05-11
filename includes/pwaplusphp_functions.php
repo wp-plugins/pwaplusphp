@@ -5,7 +5,7 @@ function setupCaption($caption,$lightbox,$count) {
         if ($lightbox == "HIGHSLIDE") {
                 $return = "onclick=\"return hs.expand(this, { captionText: '$caption' } )\" alt='$caption' title='$caption'";
         } else {
-                $return = "alt='$caption' title='$caption'";
+                $return = "alt=\"$caption\" title=\"$caption\"";
         }
         return($return);
 }
