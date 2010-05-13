@@ -25,6 +25,7 @@ $CAPTION_LENGTH         = get_option("pwaplusphp_caption_length","23");
 $DESCRIPTION_LENGTH     = get_option("pwaplusphp_description_length","120");
 $DATE_FORMAT		= get_option("pwaplusphp_date_format","Y-m-d");
 $CACHE_THUMBNAILS       = get_option("pwaplusphp_cache_thumbs","FALSE");
+$MAIN_PHOTO_PAGE        = get_option("pwaplusphp_main_photo");
 
 
 
@@ -55,7 +56,6 @@ $DESCRIPTION_LENGTH_TO = $DESCRIPTION_LENGTH - 3;
 $OPEN=0;
 $TW20 = $ALBUM_THUMBSIZE + round($ALBUM_THUMBSIZE * .1);
 $TWM10 = $ALBUM_THUMBSIZE - 8;
-$overlay_class = "class = 'overlay'";
 
 #----------------------------------------------------------------------------
 # Check for required variables from config file
@@ -177,7 +177,6 @@ foreach ($vals as $val) {
 
 		   if ((($FILTER == "RANDOM") && ($random_album == $album_count)) || ($FILTER != "RANDOM")) {
 
-			$twstyle="width: " . $TW20 . "px;";
                         list($disp_name,$tags) = split('_',$title);
 
 			# --------------------------------------------------------------------
@@ -187,8 +186,7 @@ foreach ($vals as $val) {
                                 $disp_name = substr($disp_name,0,$TRUNCATE_TO) . "...";
                         }
 			$total_images = $total_images + $num;
-                        $out .= "<div class='thumbnail' style='width: " . $TW20 . "px;'>\n";
-                        $out .= "<div class='thumbimage' style='width: " . $TWM10 . "px;'  id='album$album_count'>\n";
+                        $out .= "<div class='pwaplusphp_albumcover'>\n";
 			$uri = $_SERVER["REQUEST_URI"];
 			list($back_link,$uri_tail) = split('\?',$uri);
                    	if ( get_option('permalink_structure') != '' ) {
@@ -200,9 +198,9 @@ foreach ($vals as $val) {
 			if (($FILTER == "RANDOM") || ($COVER == "TRUE")){
 				$blog_url = get_bloginfo('url');
 				$RANDOM_URI = $blog_url . "/?page_id=" . $MAIN_PHOTO_PAGE;
-				$out .= "<a $overlay_class href=\"" . $RANDOM_URI . "&album=$picasa_name\"><img class='pwaimg' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
+				$out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href=\"" . $RANDOM_URI . "&album=$picasa_name\"><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
 			} else {
-				$out .= "<a $overlay_class href=\"" . $_SERVER["REQUEST_URI"] . $urlchar . "album=$picasa_name\"><img class='pwaimg' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
+				$out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href=\"" . $_SERVER["REQUEST_URI"] . $urlchar . "album=$picasa_name\"><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
 			}
 
 			$trim_epoch = substr($epoch,0,10);
@@ -226,8 +224,7 @@ foreach ($vals as $val) {
 				}
                         }	
 			$out .= "</a>";
-                        $out .= "</div>\n";
-                        $out .= "<div class='galdata' style='$twstyle; float:left;'>\n";
+                        $out .= "<div class='pwaplusphp_galdata'>\n";
 			if (($FILTER == "RANDOM") || ($COVER == "TRUE")) {
 				if ($COVER != "TRUE") {
 					$RANDOM_URI = $back_link . "?page_id=" . $MAIN_PHOTO_PAGE;
@@ -237,7 +234,7 @@ foreach ($vals as $val) {
 				$out .= "<a class='album_link' href='" . $_SERVER["REQUEST_URI"] . $urlchar . "album=$picasa_name'>$disp_name</a>\n";
 			}
 			if (($wptouch_plugin->applemobile != "1") && ($COVER != "TRUE")) {
-                        $out .= "<span class='albstat'>$published, $num $LANG_IMAGES</span>\n";
+                        $out .= "<span class='pwaplusphp_albstat'>$published, $num $LANG_IMAGES</span>\n";
 			} else {
 			$out .= "<span class='albstat-wpt'>&nbsp;</span>\n";
 			}
@@ -259,7 +256,7 @@ foreach ($vals as $val) {
    if ( ($FILTER != "RANDOM") && (strtoupper($COVER) != "TRUE")) {
 	$header = "<div id='pwaheader'>";
 	if ($wptouch_plugin->applemobile != "1") {
-		$header .= "<h2>$FILTER $LANG_GALLERY</h2>";
+		$header .= "<span class='lang_gallery'>$FILTER $LANG_GALLERY</span>";
 		$header .= "<span class='total_images'>$total_images $LANG_PHOTOS_IN $album_count $LANG_ALBUMS</span></div>\n";
 	} else { 
                 $header .= "<span class='total_images_wpt'>$total_images $LANG_PHOTOS_IN $album_count $LANG_ALBUMS</span></div>\n";

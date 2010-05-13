@@ -10,6 +10,8 @@ PWA+PHP allows you to display public and private (unlisted) Picasa albums within
 
 == Description ==
 
+**v0.8 Update:** *Added new display mode "Custom Style" with no CSS in the code, allowing you to fully customize the look and feel of your albums by editing the included style.css file. To use this mode, simply set "Display Style" to "Custom Style" on the PWA+PHP settings page and then customize the CSS file to your liking.*
+
 [PWA+PHP](http://pwaplusphp.smccandl.net) is a lightweight solution for displaying your private (unlisted) and public Picasa Albums within Wordpress in your language using Fancybox, Shadowbox or Lightbox. The plugin provides a guided installer that helps you generate your gdata token and set display options for your albums. 
 
 PWA+PHP extends the capabilites of Picasa albums, allowing you to [group albums by keywords](http://code.google.com/p/pwaplusphp/wiki/Album_Filtering) in the title.  Using this capability, you can create several photo pages in WordPress and show different groups of albums on each page. You can even allow users to download full-size copies of your images.
@@ -64,6 +66,11 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 
 == Changelog ==
 
+= 0.8 =
+* Added new display mode 'Custom Style' with no hardcoded CSS style in the code. Users have complete control of the look and feel via style.css.
+* Renamed "Show Photo Caption" option on settings page to "Display Style"
+* Fixed display bug for captions with apostrophes.
+
 = 0.7 =
 * Display tweaks for enhanced compatibility with WPtouch iPhone Theme in mobile browsers
 * Fixed display bug with Overlay caption mode in Firefox
@@ -98,6 +105,9 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 * Alpha version - initial release.
 
 == Upgrade Notice ==
+= 0.8 =
+* New "Custom Style" display mode for easy look and feel tweaking.  Caption display bug fix.
+
 = 0.7 =
 * Improved WPtouch compatibility, various display-related bug fixes
 

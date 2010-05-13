@@ -175,35 +175,46 @@ if ($PRO_VERSION == "FALSE") {
 	echo "</select></td><td valign=top style='padding-top: 8px;'><i>Sets the display language.  More may be available <a href='http://code.google.com/p/pwaplusphp/downloads/list'>here</a>.</i></td></tr>";	
 	echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Album Date Format</strong></td><td valign=top style='padding-top: 7px;'><input type='text' style='width: 50px;'  name='pwaplusphp_date_format' value='$DATE_FORMAT'/>";
         echo "</td><td valign=top style='padding-top: 8px;'><i>Define the <a href='http://php.net/manual/en/function.date.php' target='_BLANK'>date format</a> for albums.  Default setting is Y-m-d, i.e. 2010-03-12. </i></td></tr>";
-	# -------
-        echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Show Photo Caption</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_show_caption'>";
+# -------
+        echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Display Style</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_show_caption'>";
         if ($SHOW_IMG_CAPTION == "ALWAYS") {
                 $caption_always = "selected";
                 $caption_hover  = "";
                 $caption_never  = "";
                 $caption_overlay  = "";
+                $caption_blank  = "";
         } else if ($SHOW_IMG_CAPTION == "HOVER") {
                 $caption_always = "";
                 $caption_hover  = "selected";
                 $caption_never  = "";
                 $caption_overlay  = "";
+                $caption_blank  = "";
         } else if ($SHOW_IMG_CAPTION == "OVERLAY") {
                 $caption_always = "";
                 $caption_hover  = "";
                 $caption_never  = "";
                 $caption_overlay  = "selected";
+                $caption_blank  = "";
+        } else if ($SHOW_IMG_CAPTION == "CUSTOM") {
+                $caption_always = "";
+                $caption_hover  = "";
+                $caption_never  = "";
+                $caption_overlay  = "";
+                $caption_blank  = "selected";
         } else {
                 $caption_always = "";
                 $caption_hover  = "";
                 $caption_never  = "selected";
                 $caption_overlay  = "";
+                $caption_blank  = "";
         }
-        echo "<option value='ALWAYS' $caption_always>Always</option>";
-        echo "<option value='HOVER' $caption_hover>Hover</option>";
-        echo "<option value='OVERLAY' $caption_overlay>Overlay</option>";
-        echo "<option value='NEVER' $caption_never>Never</option>";
+        echo "<option value='ALWAYS' $caption_always>Always Show Caption</option>";
+        echo "<option value='HOVER' $caption_hover>Caption On Hover</option>";
+        echo "<option value='OVERLAY' $caption_overlay>Overlay Caption</option>";
+        echo "<option value='NEVER' $caption_never>Never Show Caption</option>";
+        echo "<option value='CUSTOM' $caption_blank>Custom Style</option>";
         echo "</select>\n";
-        echo "</td><td valign=top style='padding-top: 8px;'><i>Choose where and how captions are displayed.</i></td></tr>";
+        echo "</td><td valign=top style='padding-top: 8px;'><i>Set display style and placement of captions. Edit CSS for Custom Style.</i></td></tr>";
 	#------------------
         # Enabled for WordPress plugin v0.3
         #
@@ -439,7 +450,7 @@ function set_gdata_token() {
 
 function set_options() {
 
-	$THIS_VERSION = "0.7";
+	$THIS_VERSION = "0.8";
 
 	update_option("pwaplusphp_picasa_username", $_POST['pwaplusphp_picasa_username']);
 	update_option("pwaplusphp_image_size",$_POST['pwaplusphp_image_size']);

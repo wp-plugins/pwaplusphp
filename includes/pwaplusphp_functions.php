@@ -10,11 +10,21 @@ function setupCaption($caption,$lightbox,$count) {
         return($return);
 }
 
-function buildDownloadDiv($filename,$orig_href,$style) {
-        $result  = "<span style='$style'>\n";
-        $result .= "<a rel='nobox' 'Save $filename' title='Save $filename' href='$orig_href'>\n";
-        $result .= "<img border=0 style='padding-left: 5px;' src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' />\n";
-        $result .= "</a></span>\n";
+function buildDownloadDiv($filename,$orig_href,$style="NULL") {
+        if ($style == "NULL") {
+                $result  = "<div class='pwaplusphp_download'>\n";
+        } else {
+                $result  = "<span style='$style'>\n";
+        }
+
+        $result .= "\t<a rel='nobox' 'Save $filename' title='Save $filename' href='$orig_href'>\n";
+        $result .= "\t<img border=0 style='padding-left: 5px;' src='" . WP_PLUGIN_URL . "/pwaplusphp/images/disk_bw.png' /></a>\n";
+
+        if ($style == "NULL") {
+                $result  .= "</div>\n";
+        } else {
+                $result  .= "</span>\n";
+        }
         return($result);
 }
 

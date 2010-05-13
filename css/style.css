@@ -1,7 +1,27 @@
-body    { font-family: Verdana,Helvetica,Arial; }
-h2      { padding: 0px; margin: 0px;}
+/**********************************************************************************/
+/* Create your own look and feel by setting Display Style = Custom Style on the   */
+/* PWA+PHP Wordpress Settings Page and editing the styles below                   */
+/**********************************************************************************/
+
+.pwaplusphp_thumbnail  { float: left; margin: 5px; padding: 5px; }
+.pwaplusphp_albumcover { float: left; margin-right: 25px; padding: 5px; }
+.pwaplusphp_imglink    { }
+.pwaplusphp_img        { border: #CCC 1px solid; padding: 5px; background: #f1f1f1;}
+.pwaplusphp_caption    { margin-top: 5px; } 
+.pwaplusphp_captext    { float: left;  }
+.pwaplusphp_comment    { float: right; }
+.pwaplusphp_download   { float: right; }
+.pwaplusphp_galdata    { float: left; font-size: 13px; padding-top: 5px;} 
+.pwaplusphp_albstat    { font-style: italic; font-size: 11px; clear: both; float: left;}
+
+
+/***********************************************************************************/
+/* Pre-Defined Styles for Overlay, Hover and Never caption styles are defined      */
+/* below.  To customize the look and feel, set Display Style = Custom Style on the */
+/* PWA+PHP Wordpress Settings Page and modify the styles ABOVE.                    */
+/***********************************************************************************/
+
 .album_link {font-weight: bold; float: left;}
-.pwaimg { padding: 5px; margin: 0px; background: #f1f1f1; border-style: solid; border-width: 1px; border-color: #CCC; }
 
 #pages {
         padding-top:    20px;
@@ -46,8 +66,6 @@ h2      { padding: 0px; margin: 0px;}
 .thumbimage 	{ float: left; padding-bottom: 5px; margin: 0px; }
 .exif           { font-size:11px; color:#808080; float: left; }
 .dlimg          { float: right; }
-.galdata	{ font-size: 13px; }
-.albstat	{ font-style: italic; font-size: 11px; padding-bottom: 15px; clear: both; float: left;}
 .albstat-wpt	{ font-size: 11px; padding-bottom: 5px; float: left; }
 .lang_gallery   { font-size: 18px; font-weight: bold; }
 .total_images_wpt   { font-size: 14px; color: #B0B0B0; margin-left: 0px }

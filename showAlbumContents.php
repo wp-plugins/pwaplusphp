@@ -243,7 +243,7 @@ foreach ($vals as $val) {
                    if (($SHOW_IMG_CAPTION == "HOVER") && ($USING_IE_6 != "TRUE")){
 
 			# ONLY WANT HEIGHT IF NON-CROPPED THUMBNAILS
-			$out .= "<div class='thumbnail' style='width: " . $TZ10 . "px; ";
+			$out .= "<div class='pwaplusphp_thumbnail' style='width: " . $TZ10 . "px; ";
 
 			if ($CROP_THUMBNAILS == "FALSE") {
                                 $out .= "height: " . $TZ30 . "px; ";
@@ -251,7 +251,7 @@ foreach ($vals as $val) {
 
 			$out .= "text-align: center;'>\n";
                         $caption_link_tweak = setupCaption($caption,$ACTIVE_LIGHTBOX,$count);
-                        $out .= " <a $caption_link_tweak href='$href'><img class='pwaimg' src='$thumb' alt='$caption' /></a>\n";
+                        $out .= " <a $caption_link_tweak href='$href'><img class='pwaplusphp_img' src='$thumb' alt='$caption' /></a>\n";
                         $out .= " <div id='options' style='width:" . $TZ10 . "px;'>\n";
                         $out .= "  <span class='short_caption'>$short_caption</a></span>\n";
 
@@ -267,7 +267,7 @@ foreach ($vals as $val) {
                    } else if ((($SHOW_IMG_CAPTION == "ALWAYS") && (($PERMIT_IMG_DOWNLOAD == "TRUE") || ($SHOW_CAPTIONS == "TRUE"))) || (($SHOW_IMG_CAPTION == "HOVER") && ($USING_IE_6 == "TRUE"))){
 
 			# ONLY WANT HEIGHT IF NON-CROPPED THUMBNAILS
-                        $out .= " <div class='thumbnail' style='width:" . $TZ10 . "px; ";
+                        $out .= " <div class='pwaplusphp_thumbnail' style='width:" . $TZ10 . "px; ";
 
 			if ($CROP_THUMBNAILS == "FALSE") {
 				$out .= "height: " . $TZ30 . "px; ";
@@ -275,7 +275,7 @@ foreach ($vals as $val) {
 
 			$out .= "text-align: center; padding-bottom: 10px;'>\n";
                         $caption_link_tweak = setupCaption($caption,$ACTIVE_LIGHTBOX,$count);
-                        $out .= " <a $caption_link_tweak href='$href'><img class='pwaimg' src='$thumb' alt='$caption' /></a>\n";
+                        $out .= " <a $caption_link_tweak href='$href'><img class='pwaplusphp_img' src='$thumb' alt='$caption' /></a>\n";
                         $out .= "  <span class='short_caption2'>$short_caption</span>\n";
 
 			# Show Download Icon
@@ -284,6 +284,19 @@ foreach ($vals as $val) {
                 	}
 			
 			$out .= "</div>\n";
+
+		   # CASE CUSTOM STYLE
+                   } else if ($SHOW_IMG_CAPTION == "CUSTOM") {
+                        $out .= "<div class='pwaplusphp_thumbnail'>\n";
+                                $out .= "\t<a class='pwaplusphp_imglink' href='$href'><img class='pwaplusphp_img' src='$thumb' alt='$caption'></a>\n";
+                                $out .= "\t<div class='pwaplusphp_caption'><p class='pwaplusphp_captext'>$short_caption</p>\n";
+
+                        # Show Download Icon
+                        if ($PERMIT_IMG_DOWNLOAD == "TRUE") {
+                                $out .= buildDownloadDiv($filename,$orig_href);
+                        }
+
+                        $out .= "</div></div>";
 
 		   # CASE: CAPTION = OVERLAY OR NEVER
 		   } else {
