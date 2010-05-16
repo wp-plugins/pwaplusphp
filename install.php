@@ -28,7 +28,7 @@ function get_gdata_token() {
 	$port = ($_SERVER['SERVER_PORT'] != 80) ? ':' . $_SERVER['SERVER_PORT'] : '';
 	$self  = $_SERVER['PHP_SELF'];
 	$loc  = urlencode("http://" . $site . $port . $self . "?page=pwaplusphp&loc=return");
-	$next = "http://www.google.com/accounts/AuthSubRequest?scope=http%3A%2F%2Fpicasaweb.google.com%2Fdata%2F&session=1&secure=0&next=$loc";
+	$next = "https://www.google.com/accounts/AuthSubRequest?scope=http%3A%2F%2Fpicasaweb.google.com%2Fdata%2F&session=1&secure=0&next=$loc";
 	echo "<h2>Install Step 1: Token Generation</h2>";
 	echo "<p>Generating this Google \"GData\" token is a one-time step that allows PWA+PHP to access to your private (unlisted) Picasa albums. Click the link below to continue if you wish to set up PicasaWeb tokens for site: <strong>$site</strong></p>";
 	echo "<p>If this is correct, <a href='$next'>";
