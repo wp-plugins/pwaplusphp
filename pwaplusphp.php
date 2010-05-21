@@ -142,7 +142,7 @@ add_filter('widget_text', 'do_shortcode');
 **/
 add_action('wp_head', 'addHeaderCode');
 function addHeaderCode() {
-	 echo '<head><link rel="stylesheet" type="text/css" href="' . WP_PLUGIN_URL . '/pwaplusphp/css/style.css" /></head>';
+	 echo '<link rel="stylesheet" type="text/css" href="' . WP_PLUGIN_URL . '/pwaplusphp/css/style.css" />';
 }
 
 function get_include_contents($filename) {
