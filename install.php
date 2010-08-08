@@ -3,7 +3,10 @@ global $PRO_VERSION;
 global $THIS_VERSION;
 $PRO_VERSION = "FALSE";		# Changing this only affects the installer and won't enable PRO features.
 echo "<div class='wrap'>";
-
+echo "<div id='icon-plugins' class='icon32'></div><h2>PWA+PHP Plugin Settings</h2><br />";
+if ($_GET['loc'] == "finish") {
+	echo "<div style='width: 71%; margin: 0px 0px 0px 20px; padding: 5px; background-color: #ffffcc; border: #e6e6e6 1px solid;'>Configuration is complete and PWA+PHP is ready for use. Create a page with contents \"[pwaplusphp]\" to see your albums.</div>";
+}
 echo "<table cellspacing=20><tr><td width='75%' valign=top>";
 
 #==============================================================================================
@@ -74,7 +77,6 @@ if ($PRO_VERSION == "FALSE") {
 		$ACTIVE_LIGHTBOX = getActiveLightbox();
 }
 
-	echo "<div id='icon-plugins' class='icon32'></div><h2>PWA+PHP Plugin Settings</h2><br />";
 	echo "<form name=form1 action='$self?page=pwaplusphp&loc=finish' method='post'>\n";
 	echo "<table class='widefat' cellspacing=5 width=700>\n";
 	echo "<thead><tr><th valign=top colspan=3>Picasa Access Settings</th></tr></thead>\n";
@@ -201,6 +203,12 @@ if ($PRO_VERSION == "FALSE") {
                 $caption_never  = "";
                 $caption_overlay  = "";
                 $caption_blank  = "selected";
+	} else if ($SHOW_IMG_CAPTION == "SLIDESHOW") {
+                $caption_always = "";
+                $caption_hover  = "";
+                $caption_never  = "";
+                $caption_overlay  = "";
+                $caption_blank  = "";
         } else {
                 $caption_always = "";
                 $caption_hover  = "";
@@ -394,7 +402,7 @@ echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Truncat
 <p class="submit">
 <input class='button-primary' type="submit" name="Submit" value="<?php _e('Update Options', 'pwaplusphp' ) ?>" />
 </p>
-<?PHP
+<?
 	echo "</form>\n";
 }
 
@@ -450,7 +458,7 @@ function set_gdata_token() {
 
 function set_options() {
 
-	$THIS_VERSION = "0.8";
+	$THIS_VERSION = "0.9a";
 
 	update_option("pwaplusphp_picasa_username", $_POST['pwaplusphp_picasa_username']);
 	update_option("pwaplusphp_image_size",$_POST['pwaplusphp_image_size']);
@@ -475,10 +483,6 @@ function set_options() {
 	update_option("pwaplusphp_cache_thumbs",$_POST['pwaplusphp_cache_thumbs']);
 	update_option("pwaplusphp_main_photo",$_POST['page_id']);
 	update_option("pwaplusphp_show_comments",$_POST['pwaplusphp_show_comments']);
-
-	
-	echo "<h2>Options Saved</h2>";
-	echo "Configuration is complete and PWA+PHP is ready for use. To get started, create a new page with contents \"[pwaplusphp]\"."; 
 
 }
 
@@ -506,6 +510,7 @@ if ($loc == "gdata") {
 	get_options();	
 } else {
         set_options();
+	get_options();
 } 
 #else {
 #	if (file_exists($cfg)) {
@@ -522,7 +527,7 @@ if ($loc == "gdata") {
 #}
 
 global $THIS_VERSION;
-echo "</td><td width='25%' valign=top style='padding-top: 70px;'>";
+echo "</td><td width='25%' valign=top style='padding-top: 0px;'>";
 
 echo "<table class='widefat' width='100%'>";
 echo "<thead><tr><th valign=top colspan=3>Help & Support</th></tr></thead>\n";

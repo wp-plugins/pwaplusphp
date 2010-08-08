@@ -4,7 +4,7 @@ Plugin Name: 	PWA+PHP
 Plugin URI: 	http://pwaplusphp.smccandl.net/
 Description:	PWA+PHP allows you to display public and private (unlisted) Picasa albums within WordPress in your language using Fancybox, Shadowbox or Lightbox.	
 Author: 	Scott McCandless
-Version:	0.8
+Version:	0.9
 Author URI: 	http://pwaplusphp.smccandl.net/
 */
 
@@ -83,21 +83,24 @@ function pwaplusphp_shortcode( $atts, $content = null ) {
 
         extract(shortcode_atts(array("album" => 'NULL'), $atts));
         extract(shortcode_atts(array("filter" => ''), $atts));
+	extract(shortcode_atts(array("tag" => 'NULL'), $atts));
 
-        if (($album == "NULL") && (!isset($_GET["album"]))) {
+        if (($album == "NULL") && (!isset($_GET["album"])) && ($tag == "NULL")) {
                 $out = dumpAlbumList($filter);
                 return($out);
         } else {
                 if ($album != "NULL") {
                         if ($album != "random_photo") {
-                                $out = showAlbumContents($album,"TRUE");
+                                $out = showAlbumContents($album,"TRUE",$tag);
                         } else {
                                 $out = get_include_contents(dirname(__FILE__).'/one_random.php');
                         }
                 } else if (isset($_GET["album"])) {
                         $album = $_GET["album"];
-                        $out = showAlbumContents($album);
-                }
+                        $out = showAlbumContents($album,"FALSE",$tag);
+                } else if ($tag != "NULL") {
+			$out = showAlbumContents($album,"FALSE",$tag);
+		}
         return($out);
         }
 
@@ -156,4 +159,17 @@ function get_include_contents($filename) {
     return false;
 }
 
+/**
+ * Add Settings link to plugins - code from GD Star Ratings
+ */
+add_filter('plugin_action_links', 'add_settings_link', 10, 2 );
+function add_settings_link($links, $file) {
+	static $this_plugin;
+	if (!$this_plugin) $this_plugin = plugin_basename(__FILE__);
+	if ($file == $this_plugin){
+		$settings_link = '<a href="options-general.php?page=pwaplusphp">'.__("Settings", "pwaplusphp").'</a>';
+		array_unshift($links, $settings_link);
+	}
+	return $links;
+}
 ?>

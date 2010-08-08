@@ -9,8 +9,7 @@ Stable tag: trunk
 PWA+PHP allows you to display public and private (unlisted) Picasa albums within WordPress in your language using Fancybox, Shadowbox or Lightbox.
 
 == Description ==
-
-**v0.8 Update:** *Added new display mode "Custom Style" with no CSS in the code, allowing you to fully customize the look and feel of your albums by editing the included style.css file. To use this mode, simply set "Display Style" to "Custom Style" on the PWA+PHP settings page and then customize the CSS file to your liking.*
+**v0.9 Update:** *Added new shortcode option, 'tag', to display photos matching tags in all albums or in a specific album when paired with 'album' option. Designed easier access to settings page, fixed a pagination bug, and settings updates are confirmed on the same page.*
 
 [PWA+PHP](http://pwaplusphp.smccandl.net) is a lightweight solution for displaying your private (unlisted) and public Picasa Albums within Wordpress in your language using Fancybox, Shadowbox or Lightbox. The plugin provides a guided installer that helps you generate your gdata token and set display options for your albums. 
 
@@ -66,6 +65,12 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 
 == Changelog ==
 
+= 0.9 =
+* Added new shortcode option, 'tag', to display photos matching tags in all albums or in a specific album when paired with 'album' option.
+* Added 'Settings' link underneath the plugin name on the Plugins page for easier access to the settings after install
+* Updated the settings page target so that the user is returned to the settings page after clicking Update button
+* Fixed problem with pagination so that the Pages div is not displayed unless there are multiple pages of results
+
 = 0.8 =
 * Added new display mode 'Custom Style' with no hardcoded CSS style in the code. Users have complete control of the look and feel via style.css.
 * Renamed "Show Photo Caption" option on settings page to "Display Style"
@@ -105,6 +110,9 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 * Alpha version - initial release.
 
 == Upgrade Notice ==
+= 0.9 =
+* New 'tag' option in shortcode, easier access to settings via plugins page, improved settings page behavior, and pagination bug fix.
+
 = 0.8 =
 * New "Custom Style" display mode for easy look and feel tweaking.  Caption display bug fix.
 

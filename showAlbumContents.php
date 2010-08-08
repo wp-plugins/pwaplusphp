@@ -6,7 +6,8 @@ if (!function_exists("stripos")) {
     }
 }
 
-function showAlbumContents($ALBUM,$IN_POST = null) {
+function showAlbumContents($ALBUM,$IN_POST = null,$TAG) {
+
 
 $USE_LIGHTBOX="TRUE";
 $STANDALONE_MODE="TRUE";
@@ -103,16 +104,26 @@ $meta_tag = "";
 #----------------------------------------------------------------------------
 if ($IN_POST == "TRUE") {
         $IMAGES_PER_PAGE = 0;
+} else if ($IN_POST == "SLIDESHOW") {
+	$IMGMAX = "d";	
+	$SHOW_IMG_CAPTION = "SLIDESHOW";
 }
 
 if ($CROP_THUMBNAILS == "TRUE") { $CROP_CHAR = "c"; }
 else { $CROP_CHAR = "u"; }
 
-if ($IMAGES_PER_PAGE == 0) {
 
-	$file = "http://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER . "/album/" . $ALBUM . "?kind=photo&thumbsize=" . $GALLERY_THUMBSIZE . $CROP_CHAR . "&imgmax=" . $IMGMAX;
+$file = "http://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER;
 
-} else {
+if ($ALBUM != "NULL") { $file .= "/album/" . $ALBUM; }
+
+$file.= "?kind=photo&thumbsize=" . $GALLERY_THUMBSIZE . $CROP_CHAR . "&imgmax=" . $IMGMAX;	
+
+if ($TAG != "NULL") { $file .= "&tag=$TAG"; }
+
+#echo $file;
+
+if ($IMAGES_PER_PAGE != 0) {
 
 	$page = $_GET['page'];
 	if (!(isset($page))) {
@@ -124,9 +135,10 @@ if ($IMAGES_PER_PAGE == 0) {
 		$start_image_index = 1;
 	}
 
-	$file = "http://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER . "/album/" . $ALBUM . "?kind=photo&thumbsize=" . $GALLERY_THUMBSIZE . $CROP_CHAR . "&imgmax=" . $IMGMAX . "&max-results=" . $IMAGES_PER_PAGE . "&start-index=" . $start_image_index;
+	$file .= "&max-results=" . $IMAGES_PER_PAGE . "&start-index=" . $start_image_index;
 
 }
+echo $file;
 $vals = doCurlExec($file);
 
 # Iterate over the array and extract the info we want
@@ -164,6 +176,10 @@ foreach ($vals as $val) {
 
 		 case "GPHOTO:ID":
                      $albumid = $val["value"];
+                     break;
+
+		 case "OPENSEARCH:TOTALRESULTS":
+                     $result_count = $val["value"];
                      break;
 	   }
 
@@ -209,7 +225,7 @@ foreach ($vals as $val) {
 			list($AT,$tags) = split('_',$picasa_title);
 			$AT = str_replace("\"", "", $AT);
                         $AT = str_replace("'", "",$AT);
-			if ($IN_POST != "TRUE") {
+			if (($IN_POST != "TRUE") && ($IN_POST != "SLIDESHOW")) {
                                 $out .= "<div id='title'><h2>$AT</h2><span><a class='back_to_list' href='" . $back_link . "'>...$LANG_BACK</span></div>\n";
                         }
                         $STOP_FLAG=1;
@@ -239,8 +255,12 @@ foreach ($vals as $val) {
 
 		if (($vidpos == "") || ($HIDE_VIDEO == "FALSE")) {
 
+		   if ($SHOW_IMG_CAPTION == "SLIDESHOW") {
+
+                        echo "<img src='" . $href . "' width='" . $imgwd . "' height='" . $imght . "' />\n";
+
 		   # CASE: CAPTION = HOVER & IE6 = FALSE
-                   if (($SHOW_IMG_CAPTION == "HOVER") && ($USING_IE_6 != "TRUE")){
+                   } else if (($SHOW_IMG_CAPTION == "HOVER") && ($USING_IE_6 != "TRUE")){
 
 			# ONLY WANT HEIGHT IF NON-CROPPED THUMBNAILS
 			$out .= "<div class='pwaplusphp_thumbnail' style='width: " . $TZ10 . "px; ";
@@ -298,7 +318,6 @@ foreach ($vals as $val) {
 
                         $out .= "</div></div>";
 
-		   # CASE: CAPTION = OVERLAY OR NEVER
 		   } else {
 
                         $out .= "<p class='blocPhoto' style='width: " . $TZ10 . "px; height: " . $TZ20 . "px;'>";
@@ -335,10 +354,10 @@ foreach ($vals as $val) {
 	#----------------------------------------------------------------------------
 	# Show output for pagination
 	#----------------------------------------------------------------------------
-	if ($IMAGES_PER_PAGE != 0) {
+	if (($IMAGES_PER_PAGE != 0) && ($result_count > $IMAGES_PER_PAGE)){
 
 		$out .= "<div id='pages'>";
-		$paginate = ($numphotos/$IMAGES_PER_PAGE) + 1;
+		$paginate = ($result_count/$IMAGES_PER_PAGE) + 1;
 		$out .= "$LANG_PAGE: ";
 
 		# List pages
