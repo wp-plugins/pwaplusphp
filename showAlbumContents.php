@@ -138,7 +138,6 @@ if ($IMAGES_PER_PAGE != 0) {
 	$file .= "&max-results=" . $IMAGES_PER_PAGE . "&start-index=" . $start_image_index;
 
 }
-echo $file;
 $vals = doCurlExec($file);
 
 # Iterate over the array and extract the info we want
