@@ -225,7 +225,7 @@ foreach ($vals as $val) {
 			$AT = str_replace("\"", "", $AT);
                         $AT = str_replace("'", "",$AT);
 			if (($IN_POST != "TRUE") && ($IN_POST != "SLIDESHOW")) {
-				if ($TAG == "") {
+				if (($TAG == "") && ($TAG != "NULL")) {
                                 	$out .= "<div id='title'><h2>$AT</h2>";
 				} else {
 					$out .= "<div id='title'><h2>Photos tagged '$TAG'</h2>";
