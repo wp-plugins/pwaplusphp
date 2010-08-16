@@ -225,7 +225,12 @@ foreach ($vals as $val) {
 			$AT = str_replace("\"", "", $AT);
                         $AT = str_replace("'", "",$AT);
 			if (($IN_POST != "TRUE") && ($IN_POST != "SLIDESHOW")) {
-                                $out .= "<div id='title'><h2>$AT</h2><span><a class='back_to_list' href='" . $back_link . "'>...$LANG_BACK</span></div>\n";
+				if ($TAG == "") {
+                                	$out .= "<div id='title'><h2>$AT</h2>";
+				} else {
+					$out .= "<div id='title'><h2>Photos tagged '$TAG'</h2>";
+				}
+				$out .= "<span><a class='back_to_list' href='" . $back_link . "'>...$LANG_BACK</span></div>\n";
                         }
                         $STOP_FLAG=1;
                 }

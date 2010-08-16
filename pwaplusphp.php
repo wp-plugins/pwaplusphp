@@ -4,7 +4,7 @@ Plugin Name: 	PWA+PHP
 Plugin URI: 	http://pwaplusphp.smccandl.net/
 Description:	PWA+PHP allows you to display public and private (unlisted) Picasa albums within WordPress in your language using Fancybox, Shadowbox or Lightbox.	
 Author: 	Scott McCandless
-Version:	0.9.1
+Version:	0.9.2
 Author URI: 	http://pwaplusphp.smccandl.net/
 */
 

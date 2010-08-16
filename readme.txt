@@ -64,6 +64,9 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 6. Overlay display option
 
 == Changelog ==
+= 0.9.2 =
+* Bug fix: fixed issue where username is displayed as title when using tags
+
 = 0.9.1 = 
 * Bug fix: removed debug URL echo from the top the album page. User can also delete line: echo $file from dumpAlbumList.php.
 
