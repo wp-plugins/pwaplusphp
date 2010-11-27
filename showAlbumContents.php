@@ -6,7 +6,7 @@ if (!function_exists("stripos")) {
     }
 }
 
-function showAlbumContents($ALBUM,$IN_POST = null,$TAG) {
+function showAlbumContents($ALBUM,$IN_POST = null,$TAG,$overrides_array) {
 
 
 $USE_LIGHTBOX="TRUE";
@@ -26,6 +26,11 @@ $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
 $CAPTION_LENGTH         = get_option("pwaplusphp_caption_length","23");
 $CROP_THUMBNAILS	= get_option("pwaplusphp_crop_thumbs","TRUE");
 $HIDE_VIDEO		= get_option("pwaplusphp_hide_video","FALSE");
+
+if ($overrides_array["images_per_page"] != "") { $IMAGES_PER_PAGE = $overrides_array["images_per_page"];}
+if ($overrides_array["image_size"]) { $IMGMAX = $overrides_array["image_size"];}
+if ($overrides_array["thumbnail_size"]) { $GALLERY_THUMBSIZE = $overrides_array["thumbnail_size"];}
+
 
 # Added to support format adjustments when using wptouch, need to check if wptouch is enabled first
 global $wptouch_plugin;
@@ -121,7 +126,6 @@ $file.= "?kind=photo&thumbsize=" . $GALLERY_THUMBSIZE . $CROP_CHAR . "&imgmax=" 
 
 if ($TAG != "NULL") { $file .= "&tag=$TAG"; }
 
-#echo $file;
 
 if ($IMAGES_PER_PAGE != 0) {
 
@@ -230,7 +234,7 @@ foreach ($vals as $val) {
 				} else {
 					$out .= "<div id='title'><h2>Photos tagged '$TAG'</h2>";
 				}
-				$out .= "<span><a class='back_to_list' href='" . $back_link . "'>...$LANG_BACK</span></div>\n";
+				$out .= "<span><a class='back_to_list' href='" . $back_link . "'>...$LANG_BACK</a></span></div>\n";
                         }
                         $STOP_FLAG=1;
                 }

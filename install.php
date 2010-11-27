@@ -51,6 +51,7 @@ $GALLERY_THUMBSIZE      = get_option("pwaplusphp_thumbnail_size",160);
 $ALBUM_THUMBSIZE      	= get_option("pwaplusphp_album_thumbsize",160);
 $REQUIRE_FILTER         = get_option("pwaplusphp_require_filter","FALSE");
 $IMAGES_PER_PAGE        = get_option("pwaplusphp_images_per_page",0);
+$ALBUMS_PER_PAGE		= get_option("pwaplusphp_albums_per_page",0);
 $PUBLIC_ONLY            = get_option("pwaplusphp_public_only","FALSE");
 $SHOW_ALBUM_DETAILS     = get_option("pwaplusphp_album_details","TRUE");
 $CHECK_FOR_UPDATES      = get_option("pwaplusphp_updates","TRUE");
@@ -250,6 +251,10 @@ if ($PRO_VERSION == "FALSE") {
         #}
         #echo "</select>\n";
         echo "</td><td valign=top style='padding-top: 8px;'><i>Thumbnails per page. Zero means don't paginate.</i></td></tr>";
+#--------
+	echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Albums Per Page</strong></td><td valign=top style='padding-top: 7px;'><input type='text' style='width: 50px;'  name='pwaplusphp_albums_per_page' value='$ALBUMS_PER_PAGE'/>";
+echo "</td><td valign=top style='padding-top: 8px;'><i>Album thumbnails per page. Zero means don't paginate.</i></td></tr>";
+#-------
 	echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Image Size</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_image_size'>";
 	$image_sizes = array("1600","1440","1280","1152","1024","912","800","720","640","576","512","400","320","288","200");
 	foreach ($image_sizes as $size) {
@@ -458,7 +463,7 @@ function set_gdata_token() {
 
 function set_options() {
 
-	$THIS_VERSION = "0.9.2";
+	$THIS_VERSION = "0.9.3";
 
 	update_option("pwaplusphp_picasa_username", $_POST['pwaplusphp_picasa_username']);
 	update_option("pwaplusphp_image_size",$_POST['pwaplusphp_image_size']);
@@ -466,6 +471,7 @@ function set_options() {
 	update_option("pwaplusphp_album_thumbsize",$_POST['pwaplusphp_album_thumbsize']);
 	update_option("pwaplusphp_require_filter",$_POST['pwaplusphp_require_filter']);
 	update_option("pwaplusphp_images_per_page",$_POST['pwaplusphp_images_per_page']);
+	update_option("pwaplusphp_albums_per_page",$_POST['pwaplusphp_albums_per_page']);
 	update_option("pwaplusphp_public_only",$_POST['pwaplusphp_public_only']);
 	update_option("pwaplusphp_album_details",$_POST['pwaplusphp_album_details']);
 	update_option("pwaplusphp_show_dropbox",$_POST['pwaplusphp_show_dropbox']);

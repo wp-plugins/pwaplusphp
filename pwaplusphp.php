@@ -4,7 +4,7 @@ Plugin Name: 	PWA+PHP
 Plugin URI: 	http://pwaplusphp.smccandl.net/
 Description:	PWA+PHP allows you to display public and private (unlisted) Picasa albums within WordPress in your language using Fancybox, Shadowbox or Lightbox.	
 Author: 	Scott McCandless
-Version:	0.9.2
+Version:	0.9.3
 Author URI: 	http://pwaplusphp.smccandl.net/
 */
 
@@ -60,6 +60,7 @@ function pwaplusphp_remove() {
 	delete_option("pwaplusphp_album_thumbsize");
 	delete_option("pwaplusphp_require_filter");
 	delete_option("pwaplusphp_images_per_page");
+	delete_option("pwaplusphp_albums_per_page");
 	delete_option("pwaplusphp_public_only");
 	delete_option("pwaplusphp_album_details");
 	delete_option("pwaplusphp_updates");
@@ -83,7 +84,18 @@ function pwaplusphp_shortcode( $atts, $content = null ) {
 
         extract(shortcode_atts(array("album" => 'NULL'), $atts));
         extract(shortcode_atts(array("filter" => ''), $atts));
-	extract(shortcode_atts(array("tag" => 'NULL'), $atts));
+		extract(shortcode_atts(array("tag" => 'NULL'), $atts));
+		# Overrides
+		extract(shortcode_atts(array("images_per_page" => 'NULL'), $atts));
+		extract(shortcode_atts(array("image_size" => 'NULL'), $atts));
+		extract(shortcode_atts(array("thumbnail_size" => 'NULL'), $atts));
+
+		if (($images_per_page != "") && ($images_per_page != "NULL"))
+			$overrides_array["images_per_page"] = $images_per_page;
+		if (($image_size) && ($image_size != "NULL"))
+			$overrides_array["image_size"] = $image_size;
+		if (($thumbnail_size) && ($thumbnail_size != "NULL"))
+			$overrides_array["thumbnail_size"] = $thumbnail_size;
 
         if (($album == "NULL") && (!isset($_GET["album"])) && ($tag == "NULL")) {
                 $out = dumpAlbumList($filter);
@@ -91,15 +103,15 @@ function pwaplusphp_shortcode( $atts, $content = null ) {
         } else {
                 if ($album != "NULL") {
                         if ($album != "random_photo") {
-                                $out = showAlbumContents($album,"TRUE",$tag);
+                                $out = showAlbumContents($album,"TRUE",$tag,$overrides_array);
                         } else {
                                 $out = get_include_contents(dirname(__FILE__).'/one_random.php');
                         }
                 } else if (isset($_GET["album"])) {
                         $album = $_GET["album"];
-                        $out = showAlbumContents($album,"FALSE",$tag);
+                        $out = showAlbumContents($album,"FALSE",$tag,$overrides_array);
                 } else if ($tag != "NULL") {
-			$out = showAlbumContents($album,"FALSE",$tag);
+			$out = showAlbumContents($album,"FALSE",$tag,$overrides_array);
 		}
         return($out);
         }

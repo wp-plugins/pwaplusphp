@@ -10,7 +10,7 @@ $PICASAWEB_USER	 	= get_option("pwaplusphp_picasa_username");
 #$GALLERY_THUMBSIZE 	= get_option("pwaplusphp_thumbnail_size",160);
 $ALBUM_THUMBSIZE	= get_option("pwaplusphp_album_thumbsize",160);
 $REQUIRE_FILTER  	= get_option("pwaplusphp_require_filter","FALSE");
-#$IMAGES_PER_PAGE 	= get_option("pwaplusphp_images_per_page",0);
+$ALBUMS_PER_PAGE 	= get_option("pwaplusphp_albums_per_page",0);
 $PUBLIC_ONLY 	 	= get_option("pwaplusphp_public_only","TRUE");
 $SHOW_ALBUM_DETAILS  	= get_option("pwaplusphp_album_details","TRUE");
 #$CHECK_FOR_UPDATES  	= get_option("pwaplusphp_updates","TRUE");
@@ -27,7 +27,19 @@ $DATE_FORMAT		= get_option("pwaplusphp_date_format","Y-m-d");
 $CACHE_THUMBNAILS       = get_option("pwaplusphp_cache_thumbs","FALSE");
 $MAIN_PHOTO_PAGE        = get_option("pwaplusphp_main_photo");
 
-
+#----------------------------------------------------------------------------
+# Check Permalink Structure 
+#----------------------------------------------------------------------------
+if ( get_option('permalink_structure') != '' ) { 
+	# permalinks enabled
+	list($back_link,$uri_tail) = split('\?',$uri);
+	$urlchar = '?';
+        $splitchar = '\?';
+} else {
+	list($back_link,$uri_tail) = split('\&',$uri);
+	$urlchar = '&';
+        $splitchar = $urlchar;
+}
 
 # Added to support format adjustments when using wptouch, need to check if wptouch is enabled first
 global $wptouch_plugin;
@@ -79,6 +91,26 @@ if ($REQUIRE_FILTER != "FALSE") {
 # Request URL for Album list
 #----------------------------------------------------------------------------
 $file = "http://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER . "?kind=album&thumbsize=" . $ALBUM_THUMBSIZE . "c";
+
+#----------------------------------------------------------------------------
+# Pagination for Album list
+#----------------------------------------------------------------------------
+if ($ALBUMS_PER_PAGE != 0) {
+
+	$page = $_GET['page'];
+	if (!(isset($page))) {
+		$page = 1;
+	}
+	if ($page > 1) {
+		$start_image_index = (($page - 1) * $ALBUMS_PER_PAGE) + 1;
+	} else {
+		$start_image_index = 1;
+	}
+
+	$file .= "&max-results=" . $ALBUMS_PER_PAGE . "&start-index=" . $start_image_index;
+
+}
+
 $vals = doCurlExec($file);
 
 
@@ -200,7 +232,8 @@ foreach ($vals as $val) {
 				$RANDOM_URI = $blog_url . "/?page_id=" . $MAIN_PHOTO_PAGE;
 				$out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href=\"" . $RANDOM_URI . "&album=$picasa_name\"><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
 			} else {
-				$out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href=\"" . $_SERVER["REQUEST_URI"] . $urlchar . "album=$picasa_name\"><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
+				list($paged_head,$paged_tail) = split('\?',$_SERVER['REQUEST_URI']);
+				$out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href=\"" . $paged_head . $urlchar . "album=$picasa_name\"><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
 			}
 
 			$trim_epoch = substr($epoch,0,10);
@@ -268,6 +301,36 @@ foreach ($vals as $val) {
 		$out .= "<div id='pwafooter'>$LANG_GENERATED <a href='http://code.google.com/p/pwaplusphp/'>PWA+PHP</a> v" . $THIS_VERSION . ".</div>";
 	}
    }
+
+	#----------------------------------------------------------------------------
+	# Show output for pagination
+	#----------------------------------------------------------------------------
+	if (($ALBUMS_PER_PAGE != 0) && ($ALBUM_COUNT > $ALBUMS_PER_PAGE)){
+
+		$out .= "<div id='pages'>";
+		$paginate = ($ALBUM_COUNT/$ALBUMS_PER_PAGE) + 1;
+		$out .= "$LANG_PAGE: ";
+
+		# List pages
+		for ($i=1; $i<$paginate; $i++) {
+
+		   $link_image_index=($i - 1) * ($ALBUMS_PER_PAGE + 1);
+		
+		   $uri = $_SERVER["REQUEST_URI"];
+		   list($uri,$tail) = split($splitchar,$_SERVER['REQUEST_URI']);
+		   $href = $uri . $urlchar . "page=$i";
+
+		  # Show current page
+		  if ($i == $page) {
+			$out .= "<strong>$i </strong>";
+		   } else {
+			$out .= "<a class='page_link' href='$href'>$i</a> ";
+		   }
+		}
+
+		$out .= "</div>";
+
+	}
 
    $out .= "<div style='clear: both'></div>"; # Ensure PWA+PHP doesn't break theme layout
    #----------------------------------------------------------------------------
