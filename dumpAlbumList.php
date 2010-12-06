@@ -232,8 +232,12 @@ foreach ($vals as $val) {
 				$RANDOM_URI = $blog_url . "/?page_id=" . $MAIN_PHOTO_PAGE;
 				$out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href=\"" . $RANDOM_URI . "&album=$picasa_name\"><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
 			} else {
-				list($paged_head,$paged_tail) = split('\?',$_SERVER['REQUEST_URI']);
-				$out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href=\"" . $paged_head . $urlchar . "album=$picasa_name\"><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
+				if ($permalinks_on) {
+                                        list($paged_head,$paged_tail) = split('\?',$_SERVER['REQUEST_URI']);
+                                        $out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href=\"" . $paged_head . $urlchar . "album=$picasa_name\"><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
+                                } else {
+                                        $out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href='" . $_SERVER["REQUEST_URI"] . $urlchar . "album=" . $picasa_name. "'><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
+                                }
 			}
 
 			$trim_epoch = substr($epoch,0,10);
