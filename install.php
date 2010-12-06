@@ -407,7 +407,7 @@ echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Truncat
 <p class="submit">
 <input class='button-primary' type="submit" name="Submit" value="<?php _e('Update Options', 'pwaplusphp' ) ?>" />
 </p>
-<?
+<?php
 	echo "</form>\n";
 }
 
