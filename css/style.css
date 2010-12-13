@@ -95,7 +95,6 @@ a.overlay:hover span{display:block;text-align: left;color:#000;position:absolute
 	overflow: hidden;
 	background-position: 50% 45%;
 	background-repeat: no-repeat;
-	background-image: url('../img/loader.gif');
 	font-family: Helvetica, Arial, Sans-serif;
 	font-size: 10px;
 	text-align: center;
