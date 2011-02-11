@@ -223,8 +223,10 @@ foreach ($vals as $val) {
 			list($back_link,$uri_tail) = split('\?',$uri);
                    	if ( get_option('permalink_structure') != '' ) {
                         	# permalinks enabled
+				$permalinks_on = 1;
                         	$urlchar = '?';
                    	} else {
+				$permalinks_on = 0;
                         	$urlchar = '&';
                    	}
 			if (($FILTER == "RANDOM") || ($COVER == "TRUE")){
@@ -232,11 +234,11 @@ foreach ($vals as $val) {
 				$RANDOM_URI = $blog_url . "/?page_id=" . $MAIN_PHOTO_PAGE;
 				$out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href=\"" . $RANDOM_URI . "&album=$picasa_name\"><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
 			} else {
+				list($paged_head,$paged_tail) = split('\?',$_SERVER['REQUEST_URI']);
 				if ($permalinks_on) {
-                                        list($paged_head,$paged_tail) = split('\?',$_SERVER['REQUEST_URI']);
                                         $out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href=\"" . $paged_head . $urlchar . "album=$picasa_name\"><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
                                 } else {
-                                        $out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href='" . $_SERVER["REQUEST_URI"] . $urlchar . "album=" . $picasa_name. "'><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
+                                        $out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href='" . $paged_head . $urlchar . "album=" . $picasa_name. "'><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
                                 }
 			}
 
@@ -268,7 +270,8 @@ foreach ($vals as $val) {
                         		$out .= "<a class='album_link' href='" . $RANDOM_URI . $urlchar . "album=$picasa_name'>$disp_name</a>\n";
 				}
 			} else {
-				$out .= "<a class='album_link' href='" . $_SERVER["REQUEST_URI"] . $urlchar . "album=$picasa_name'>$disp_name</a>\n";
+				list($paged_head,$paged_tail) = split('\?',$_SERVER['REQUEST_URI']);
+				$out .= "<a class='album_link' href='" . $paged_head . $urlchar . "album=$picasa_name'>$disp_name</a>\n";
 			}
 			if (($wptouch_plugin->applemobile != "1") && ($COVER != "TRUE")) {
                         $out .= "<span class='pwaplusphp_albstat'>$published, $num $LANG_IMAGES</span>\n";
@@ -309,7 +312,7 @@ foreach ($vals as $val) {
 	#----------------------------------------------------------------------------
 	# Show output for pagination
 	#----------------------------------------------------------------------------
-	if (($ALBUMS_PER_PAGE != 0) && ($ALBUM_COUNT > $ALBUMS_PER_PAGE)){
+	if (($ALBUMS_PER_PAGE != 0) && ($ALBUM_COUNT > $ALBUMS_PER_PAGE) && ($COVER != "TRUE")){
 
 		$out .= "<div id='pages'>";
 		$paginate = ($ALBUM_COUNT/$ALBUMS_PER_PAGE) + 1;
