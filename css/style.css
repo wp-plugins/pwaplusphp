@@ -55,7 +55,7 @@
 	padding-bottom: 20px;
 }
 
-#footer a { color: #C0C0C0; }
+#pwafooter a 	{ color: #C0C0C0; }
 .current_page   { font-weight: bold; float: left;}
 .back_to_list   { padding: 0px; margin: 0px; font-style: italic; font-size: 11px; color: #5c5c5c; }
 .titlepg        { font-size: 13px; color: #808080; padding: 3px 0px 0px 2px; margin: 0px; }
