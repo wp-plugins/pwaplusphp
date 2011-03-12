@@ -270,8 +270,12 @@ foreach ($vals as $val) {
                         		$out .= "<a class='album_link' href='" . $RANDOM_URI . $urlchar . "album=$picasa_name'>$disp_name</a>\n";
 				}
 			} else {
-				list($paged_head,$paged_tail) = split('\?',$_SERVER['REQUEST_URI']);
-				$out .= "<a class='album_link' href='" . $paged_head . $urlchar . "album=$picasa_name'>$disp_name</a>\n";
+                                list($paged_head,$paged_tail) = split('\?',$_SERVER['REQUEST_URI']);
+                                if ($permalinks_on) {
+                                        $out .= "<a class='album_link' href='" . $paged_head . $urlchar . "album=$picasa_name'>$disp_name</a>\n";
+                                } else {
+                                        $out .= "<a class='album_link' href='" . $_SERVER["REQUEST_URI"] . $urlchar . "album=$picasa_name'>$disp_name</a>\n";
+                                }
 			}
 			if (($wptouch_plugin->applemobile != "1") && ($COVER != "TRUE")) {
                         $out .= "<span class='pwaplusphp_albstat'>$published, $num $LANG_IMAGES</span>\n";
