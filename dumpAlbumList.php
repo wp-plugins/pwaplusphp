@@ -238,7 +238,7 @@ foreach ($vals as $val) {
 				if ($permalinks_on) {
                                         $out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href=\"" . $paged_head . $urlchar . "album=$picasa_name\"><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
                                 } else {
-                                        $out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href='" . $paged_head . $urlchar . "album=" . $picasa_name. "'><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
+                                        $out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href='" . $_SERVER["REQUEST_URI"] . $urlchar . "album=" . $picasa_name. "'><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
                                 }
 			}
 

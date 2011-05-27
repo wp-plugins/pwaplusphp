@@ -4,7 +4,7 @@ Plugin Name: 	PWA+PHP
 Plugin URI: 	http://pwaplusphp.smccandl.net/
 Description:	PWA+PHP allows you to display public and private (unlisted) Picasa albums within WordPress in your language using Fancybox, Shadowbox or Lightbox.	
 Author: 	Scott McCandless
-Version:	0.9.3
+Version:	0.9.4
 Author URI: 	http://pwaplusphp.smccandl.net/
 */
 
@@ -89,6 +89,7 @@ function pwaplusphp_shortcode( $atts, $content = null ) {
 		extract(shortcode_atts(array("images_per_page" => 'NULL'), $atts));
 		extract(shortcode_atts(array("image_size" => 'NULL'), $atts));
 		extract(shortcode_atts(array("thumbnail_size" => 'NULL'), $atts));
+		extract(shortcode_atts(array("picasaweb_user" => 'NULL'), $atts));
 
 		if (($images_per_page != "") && ($images_per_page != "NULL"))
 			$overrides_array["images_per_page"] = $images_per_page;
@@ -96,6 +97,8 @@ function pwaplusphp_shortcode( $atts, $content = null ) {
 			$overrides_array["image_size"] = $image_size;
 		if (($thumbnail_size) && ($thumbnail_size != "NULL"))
 			$overrides_array["thumbnail_size"] = $thumbnail_size;
+		if (($picasaweb_user) && ($picasaweb_user != "NULL"))
+			$overrides_array["picasaweb_user"] = $picasaweb_user;
 
         if (($album == "NULL") && (!isset($_GET["album"])) && ($tag == "NULL")) {
                 $out = dumpAlbumList($filter);

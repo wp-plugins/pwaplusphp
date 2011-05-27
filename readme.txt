@@ -3,13 +3,13 @@ Contributors: smccandl
 Donate link: http://pwaplusphp.smccandl.net/
 Tags: picasa, picasa web albums, pwa, lightbox, fancybox, shadowbox, highslide, picasa comments, wptouch
 Requires at least: 2.9.1
-Tested up to: 3.0.1 
+Tested up to: 3.1.3 
 Stable tag: trunk
 
 PWA+PHP allows you to display public and private (unlisted) Picasa albums within WordPress in your language using Fancybox, Shadowbox or Lightbox.
 
 == Description ==
-**v0.9.3 Update:** *New features: paginate the albums page and override image size, thumbnail size and images per page in the shortcode.  Bugs fixed in back to albums link.*
+**v0.9.4 Update:** *Published workaround for [26/May Picasa data API bug](http://code.google.com/p/pwaplusphp/issues/detail?id=98). Added news and announcements to settings page.  New username override and various bug fixes.*
 
 [PWA+PHP](http://pwaplusphp.smccandl.net) is a lightweight solution for displaying your private (unlisted) and public Picasa Albums within Wordpress in your language using Fancybox, Shadowbox or Lightbox. The plugin provides a guided installer that helps you generate your gdata token and set display options for your albums. 
 
@@ -64,6 +64,17 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 6. Overlay display option
 
 == Changelog ==
+= 0.9.4 =
+* Added News & Announcements to settings page to communicate updates, known issues, and other important information.
+* New ability to override the username within shortcode to display any user's public album and albums for different users on each page.
+* Bug fix: Issue 98, API Bug causes first image in album to display full size
+* Bug fix: Issue 86, Caching broken for some installs
+* Bug fix: Issue 83, 404 error when clicking either thumbnail or text link.
+* Bug fix: Issue 73, Album title and 'back to album' link not displayed.
+* Bug fix: Issue 72, Setting 'Albums Per Page' not saved.
+* Bug fix: Issue 78, Paginated Albums Won't Open.
+* Bug fix: Issue 79, Drop Box Always Shown
+
 = 0.9.3 =
 * Added ability to paginate the albums page for users with large number of albums
 * Added ability to override image size, images per page and thumbnail size within the shortcode to allow for individual albums to have specific settings.

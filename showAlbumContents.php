@@ -8,7 +8,6 @@ if (!function_exists("stripos")) {
 
 function showAlbumContents($ALBUM,$IN_POST = null,$TAG,$overrides_array) {
 
-
 $USE_LIGHTBOX="TRUE";
 $STANDALONE_MODE="TRUE";
 
@@ -30,7 +29,7 @@ $HIDE_VIDEO		= get_option("pwaplusphp_hide_video","FALSE");
 if ($overrides_array["images_per_page"] != "") { $IMAGES_PER_PAGE = $overrides_array["images_per_page"];}
 if ($overrides_array["image_size"]) { $IMGMAX = $overrides_array["image_size"];}
 if ($overrides_array["thumbnail_size"]) { $GALLERY_THUMBSIZE = $overrides_array["thumbnail_size"];}
-
+if ($overrides_array["picasaweb_user"]) { $PICASAWEB_USER = $overrides_array["picasaweb_user"];}
 
 # Added to support format adjustments when using wptouch, need to check if wptouch is enabled first
 global $wptouch_plugin;
@@ -196,8 +195,13 @@ foreach ($vals as $val) {
                                 }
                                 break;
                         case "MEDIA:THUMBNAIL":
-                                $thumb = trim($val["attributes"]["URL"] . "\n");
-                                break;
+    				$tnht = $val["attributes"]["HEIGHT"];
+    				$tnwd = $val["attributes"]["WIDTH"];
+    				// Temporary? fix for google api bug 2011-05-28
+    				if (($tnht == $GALLERY_THUMBSIZE) || ($tnwd == $GALLERY_THUMBSIZE)) {
+        				$thumb = trim($val["attributes"]["URL"] . "\n");
+    				}
+    				break;
                         case "MEDIA:CONTENT":
                                 $href = $val["attributes"]["URL"];
 				$orig_href = str_replace("s$IMGMAX","d",$href);

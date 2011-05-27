@@ -150,6 +150,17 @@ if ($PRO_VERSION == "FALSE") {
         if ($PRO_VERSION == "TRUE") { wp_dropdown_pages($args); }
         echo "</td><td valign=top style='$disabled_color padding-top: 7px;'><i>Create a page with [pwaplusphp] and select it. Required for album cover shortcode.</i></td></tr>";
         #--------------------------
+        echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>jQuery Page Transition</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_jq_pagination' $pro_disabled>";;
+        $available_styles = array("blindX","blindY","blindZ","cover","curtainX","curtainY","fade","fadeZoom","growX","growY","none","scrollUp","scrollDown","scrollLeft","scrollRight","scrollHorz","scrollVert","shuffle","slideX","slideY","toss","turnUp","turnDown","turnLeft","turnRight","uncover","wipe","zoom");
+        foreach ($available_styles as $style) {
+                if ($JQ_PAGINATION_STYLE != $style) {
+                        echo "<option value='$style'>$style</option>";
+                } else {
+                        echo "<option value='$style' selected>$style</option>";
+                }
+        }
+        echo "</td><td valign=top style='$disabled_color padding-top: 7px;'><i>Set <a href='http://jquery.malsup.com/cycle/browser.html' target='_BLANK' alt='See Transition Demos' title='See Transition Demos'>page transition style</a>. Use \"none\" to disable.</i></td></tr>";
+        #--------------------------
 	echo "<tfoot><tr><th valign=top colspan=3></th></tr></tfoot>\n";
 	echo "</table>";	
         # -------
@@ -463,7 +474,7 @@ function set_gdata_token() {
 
 function set_options() {
 
-	$THIS_VERSION = "0.9.3";
+	$THIS_VERSION = "0.9.4g";
 
 	update_option("pwaplusphp_picasa_username", $_POST['pwaplusphp_picasa_username']);
 	update_option("pwaplusphp_image_size",$_POST['pwaplusphp_image_size']);
@@ -542,19 +553,65 @@ echo "<tfoot><tr><th valign=top colspan=3></th></tr></tfoot>\n";
 echo "</table>";
 echo "<br />";
 echo "<table class='widefat' width='100%'>";
+echo "<thead><tr><th valign=top colspan=3>News & Announcements</th></tr></thead>\n";
+echo "<tr><td>";
+	// Get RSS Feed(s) 
+	include_once(ABSPATH . WPINC . '/feed.php'); 
+	// Get a SimplePie feed object from the specified feed source. 
+	$dateu = date("U");
+	$rss = fetch_feed("http://wordpress.org/support/rss/tags/pwaplusphp&$dateu");
+ 	if (!is_wp_error( $rss ) ) :
+ 		// Checks that the object is created correctly      
+		// Figure out how many total items there are, but limit it to 5.
+		$count=0;      
+		$maxitems = $rss->get_item_quantity(50);      
+		
+		// Build an array of all the items, starting with element 0 (first element).     
+		$rss_items = $rss->get_items(0, $maxitems);  
+		endif; ?> 
+		<ul>     
+		<?php 
+			if ($maxitems == 0) {
+				echo '<li>No items.</li>';     
+			} else {     
+				// Loop through each feed item and display each item as a hyperlink.     
+				foreach ( $rss_items as $item ) {
+					$title = $item->get_title();
+					$author = substr($title,0,8);
+					$title = substr($title,36);
+					$title = substr($title,0,-6);	// Removes &quote; from the end
+					$news = substr($title,-6);
+					$title = substr($title,0,-6);
+					if (($author == "smccandl") && ($count <= 5) && ($news == "[News]")) { 
+					$count++;
+					?>
+						<li>
+							<a target='_BLANK' href='<?php echo $item->get_permalink(); ?>' title='<?php echo 'Posted '.$item->get_date('j F Y | g:i a'); ?>'>
+				       		<?php echo $title ?></a>
+						</li>
+					<?php } 
+				}
+			 } ?> 
+		</ul>
+<?php
+echo "</td></tr>";
+echo "<tfoot><tr><th valign=top colspan=3></th></tr></tfoot>\n";
+echo "</table>";
+echo "<br />";
+echo "<table class='widefat' width='100%'>";
 if ($PRO_VERSION == "TRUE") {
 	$pro_version_msg = check_for_updates($THIS_VERSION);
 	$pv = "Pro";
 	$pro_title = "You are using PWA+PHP Pro";
 } else {
 	$pv = "Basic";
-	$pro_version_msg = "The <a href='http://pwaplusphp.smccandl.net/pro/' target='_BLANK'>Pro Version</a> offers advanced features including: support for comments, thumbnail caching for faster page loads and additional short codes for new functionality.";
+	$pro_version_msg = "The <a href='http://pwaplusphp.smccandl.net/pro/' target='_BLANK'>Pro Version</a> offers advanced features including: support for comments, thumbnail and XML caching for dramatically faster page loads, jQuery effects and extra short codes.";
 	$pro_version_msg .= "<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\">";
 $pro_version_msg .= "<input type=\"hidden\" name=\"cmd\" value=\"_s-xclick\">";
 $pro_version_msg .= "<input type=\"hidden\" name=\"encrypted\" value=\"-----BEGIN PKCS7-----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-----END PKCS7-----\">";
 $pro_version_msg .= "<input style='margin-top: 7px; float: right;' type='submit' value='Donate Now!' class='button-secondary' />";
 $pro_version_msg .= "</form>";
-	$pro_title = "Donate $5 to get PWA+PHP Pro";
+	$pro_title = "24x Faster Page Loads with Pro!";
 }
 
 echo "<thead><tr><th valign=top colspan=3>$pro_title</th></tr></thead>\n";
