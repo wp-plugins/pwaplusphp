@@ -36,8 +36,6 @@ global $wptouch_plugin;
 
 if ($wptouch_plugin->applemobile == "1") {
 
-	$IMGMAX = "912";
-        $GALLERY_THUMBSIZE = "104";
         $SHOW_ALBUM_DETAILS = "FALSE";
         $PERMIT_IMG_DOWNLOAD = "FALSE";
 	$SHOW_IMG_CAPTION = "NEVER";
@@ -245,7 +243,7 @@ foreach ($vals as $val) {
 		
 		# Set image caption
                 if ($text != "") {
-                        $caption = $text;
+                        $caption = htmlentities( $text , ENT_QUOTES );
                 } else {
                         $caption = $AT . " - " . $filename;
                 }

@@ -47,7 +47,6 @@ global $wptouch_plugin;
 
 if ($wptouch_plugin->applemobile == "1") {
 
-	$ALBUM_THUMBSIZE = "104";
 	$SHOW_ALBUM_DETAILS = "FALSE";
 	$PERMIT_IMG_DOWNLOAD = "FALSE";
 	$CAPTION_LENGTH = "15";

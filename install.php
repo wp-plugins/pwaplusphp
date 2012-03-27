@@ -1,6 +1,7 @@
 <?PHP
 global $PRO_VERSION;
 global $THIS_VERSION;
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 $PRO_VERSION = "FALSE";		# Changing this only affects the installer and won't enable PRO features.
 echo "<div class='wrap'>";
 echo "<div id='icon-plugins' class='icon32'></div><h2>PWA+PHP Plugin Settings</h2><br />";
@@ -10,7 +11,7 @@ if ($_GET['loc'] == "finish") {
 echo "<table cellspacing=20><tr><td width='75%' valign=top>";
 
 #==============================================================================================
-# Copyright 2010 Scott McCandless (smccandl@gmail.com)
+# Copyright 2012 Scott McCandless (smccandl@gmail.com)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -474,7 +475,7 @@ function set_gdata_token() {
 
 function set_options() {
 
-	$THIS_VERSION = "0.9.4g";
+	$THIS_VERSION = "0.9.5";
 
 	update_option("pwaplusphp_picasa_username", $_POST['pwaplusphp_picasa_username']);
 	update_option("pwaplusphp_image_size",$_POST['pwaplusphp_image_size']);
