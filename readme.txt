@@ -9,6 +9,8 @@ Stable tag: trunk
 PWA+PHP allows you to display public and private (unlisted) Picasa albums within WordPress in your language using Fancybox, Shadowbox or Lightbox.
 
 == Description ==
+**News:** *There is an issue with PWA+PHP pagination in v3.4 of Wordpress due to a change in WP behavior.  See [Issue 170](http://code.google.com/p/pwaplusphp/issues/detail?id=170) for a temporary fix while we work on a permanent fix.*
+
 **v0.9.5 Update:** *Fixed 3 bugs in Basic and Pro. See changelog.*
 
 [PWA+PHP](http://pwaplusphp.smccandl.net) is a lightweight solution for displaying your private (unlisted) and public Picasa Albums within Wordpress in your language using Fancybox, Shadowbox or Lightbox. The plugin provides a guided installer that helps you generate your gdata token and set display options for your albums. 
