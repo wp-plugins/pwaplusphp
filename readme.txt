@@ -1,17 +1,16 @@
 === Plugin Name ===
 Contributors: smccandl 
 Donate link: http://pwaplusphp.smccandl.net/
-Tags: picasa, picasa web albums, pwa, lightbox, fancybox, shadowbox, highslide, picasa comments, wptouch
+Tags: picasa, picasa web albums, pwa, lightbox, fancybox, shadowbox, highslide, picasa comments, wptouch, cache
 Requires at least: 2.9.1
-Tested up to: 3.1.3 
+Tested up to: 3.4.1
 Stable tag: trunk
 
 PWA+PHP allows you to display public and private (unlisted) Picasa albums within WordPress in your language using Fancybox, Shadowbox or Lightbox.
 
 == Description ==
-**News:** *There is an issue with PWA+PHP pagination in v3.4 of Wordpress due to a change in WP behavior.  See [Issue 170](http://code.google.com/p/pwaplusphp/issues/detail?id=170) for a temporary fix while we work on a permanent fix.*
 
-**v0.9.5 Update:** *Fixed 3 bugs in Basic and Pro. See changelog.*
+**v0.9.6 Update:** *Bug fixes. See changelog.*
 
 [PWA+PHP](http://pwaplusphp.smccandl.net) is a lightweight solution for displaying your private (unlisted) and public Picasa Albums within Wordpress in your language using Fancybox, Shadowbox or Lightbox. The plugin provides a guided installer that helps you generate your gdata token and set display options for your albums. 
 
@@ -67,6 +66,11 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 6. Overlay display option
 
 == Changelog ==
+= 0.9.6 =
+* Bug fix: Issue 145, Fixed caption now shown
+* Bug fix: Issue 170, Fixed pagination to support WP 3.4+
+* Updated settings page with current pro settings and purchase options
+
 = 0.9.5 =
 * Bug fix: Issue 140, Fixes single quote problem for alt attribute.
 * Bug fix: Issue 124, Better integration with wptouch

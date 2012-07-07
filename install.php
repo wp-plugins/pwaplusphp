@@ -115,12 +115,12 @@ if ($PRO_VERSION == "FALSE") {
                 echo "<tr><td colspan=3 style='color: #FF0000; font-size: 10px;'>Cache directory is not writable! Try chmod 755 " . WP_PLUGIN_DIR . "/pwaplusphp/cache/" . "</td></tr>";
         }
         echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Cache Thumbnails</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_cache_thumbs' $pro_disabled>";
-        if ($CACHE_THUMBNAILS == "FALSE") {
-                $cache_true = "";
-                $cache_false= "selected";
-        } else {
+        if ($CACHE_THUMBNAILS == "TRUE") {
                 $cache_true = "selected";
                 $cache_false= "";
+        } else {
+                $cache_true = "";
+                $cache_false= "selected";
         }
         echo "<option value='TRUE' $cache_true>Enable</option>";
         echo "<option value='FALSE' $cache_false>Disable</option>";
@@ -129,12 +129,12 @@ if ($PRO_VERSION == "FALSE") {
 	#-----------------------------------
 	if ($ACTIVE_LIGHTBOX == "NONE") { $pro_disabled = "disabled"; }
 	echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Comment System</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_show_comments' $pro_disabled>";
-        if ($SHOW_COMMENTS == "FALSE") {
-                $comments_true = "";
-                $comments_false= "selected";
-        } else {
+        if ($SHOW_COMMENTS == "TRUE") {
                 $comments_true = "selected";
                 $comments_false= "";
+        } else {
+                $comments_true = "";
+                $comments_false= "selected";
         }
         echo "<option value='TRUE' $comments_true>Enable</option>";
         echo "<option value='FALSE' $comments_false>Disable</option>";
@@ -161,7 +161,37 @@ if ($PRO_VERSION == "FALSE") {
                 }
         }
         echo "</td><td valign=top style='$disabled_color padding-top: 7px;'><i>Set <a href='http://jquery.malsup.com/cycle/browser.html' target='_BLANK' alt='See Transition Demos' title='See Transition Demos'>page transition style</a>. Use \"none\" to disable.</i></td></tr>";
-        #--------------------------
+        #-------------------------- Rob - Added images on front option
+	echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Blog View Photo Limit</strong></td><td valign=top style='padding-top: 7px;'><input type='text' style='width: 50px;'  name='pwaplusphp_images_on_front' value='$IMAGES_ON_FRONT' $pro_disabled/>";
+        echo "</td><td valign=top style='padding-top: 8px; $disabled_color'><i>Number of photos displayed per post on the main blog view. Zero means show all.</i></td></tr>";
+        #-------------------------- /
+	#-------------------------- Rob - Ability to show/hide PWA buttons in editor
+        echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Editor Buttons</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_show_button' $pro_disabled>";
+        if ($SHOW_BUTTON == "TRUE") {
+                $show_true = "selected";
+                $show_false= "";
+        } else {
+                $show_true = "";
+                $show_false= "selected";
+        }
+        echo "<option value='TRUE' $show_true>Enable</option>";
+        echo "<option value='FALSE' $show_false>Disable</option>";
+        echo "</select>\n";
+        echo "</td><td valign=top style='padding-top: 8px; $disabled_color'><i>Add text editor buttons to easily add the shortcode to pages and posts.</i></td></tr>";
+        #-------------------------- Rob - Added widget
+	echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Widgets</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_add_widget' $pro_disabled>";;
+        if ($ADD_WIDGET == "TRUE") {
+                $widget_true = "selected";
+                $widget_false= "";
+        } else {
+                $widget_true = "";
+                $widget_false= "selected";
+        }
+        echo "<option value='TRUE' $widget_true>Enable</option>";
+        echo "<option value='FALSE' $widget_false>Disable</option>";
+        echo "</select>\n";
+        echo "</td><td valign=top style='padding-top: 8px; $disabled_color'><i>Add comments and random photos widgets to the appearance menu.</i></td></tr>";
+        #-------------------------- /
 	echo "<tfoot><tr><th valign=top colspan=3></th></tr></tfoot>\n";
 	echo "</table>";	
         # -------
@@ -475,7 +505,7 @@ function set_gdata_token() {
 
 function set_options() {
 
-	$THIS_VERSION = "0.9.5";
+	$THIS_VERSION = "0.9.6";
 
 	update_option("pwaplusphp_picasa_username", $_POST['pwaplusphp_picasa_username']);
 	update_option("pwaplusphp_image_size",$_POST['pwaplusphp_image_size']);
@@ -606,12 +636,7 @@ if ($PRO_VERSION == "TRUE") {
 	$pro_title = "You are using PWA+PHP Pro";
 } else {
 	$pv = "Basic";
-	$pro_version_msg = "The <a href='http://pwaplusphp.smccandl.net/pro/' target='_BLANK'>Pro Version</a> offers advanced features including: support for comments, thumbnail and XML caching for dramatically faster page loads, jQuery effects and extra short codes.";
-	$pro_version_msg .= "<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\">";
-$pro_version_msg .= "<input type=\"hidden\" name=\"cmd\" value=\"_s-xclick\">";
-$pro_version_msg .= "<input type=\"hidden\" name=\"encrypted\" value=\"-----BEGIN PKCS7-----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-----END PKCS7-----\">";
-$pro_version_msg .= "<input style='margin-top: 7px; float: right;' type='submit' value='Donate Now!' class='button-secondary' />";
-$pro_version_msg .= "</form>";
+	$pro_version_msg = "For $10, the <a href='http://pwaplusphp.smccandl.net/pro/' target='_BLANK'>Pro Version</a> offers advanced features including: support for comments, thumbnail and XML caching for dramatically faster page loads, jQuery effects, two widgets, editor buttons, and more! Learn <a target='_BLANK' href='http://pwaplusphp.smccandl.net/pro/buy'>how to buy it</a>.";
 	$pro_title = "24x Faster Page Loads with Pro!";
 }
 

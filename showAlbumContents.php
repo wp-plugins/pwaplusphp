@@ -126,7 +126,7 @@ if ($TAG != "NULL") { $file .= "&tag=$TAG"; }
 
 if ($IMAGES_PER_PAGE != 0) {
 
-	$page = $_GET['page'];
+	$page = $_GET['pg'];
 	if (!(isset($page))) {
 		$page = 1;
 	}
@@ -294,7 +294,7 @@ foreach ($vals as $val) {
 
 		   # CASE: CAPTION = ALWAYS && DOWNLOAD = TRUE
 		   #       CAPTION = HOVER & IE6 = TRUE 
-                   } else if ((($SHOW_IMG_CAPTION == "ALWAYS") && (($PERMIT_IMG_DOWNLOAD == "TRUE") || ($SHOW_CAPTIONS == "TRUE"))) || (($SHOW_IMG_CAPTION == "HOVER") && ($USING_IE_6 == "TRUE"))){
+                   } else if (($SHOW_IMG_CAPTION == "ALWAYS") || (($SHOW_IMG_CAPTION == "HOVER") && ($USING_IE_6 == "TRUE"))) {
 
 			# ONLY WANT HEIGHT IF NON-CROPPED THUMBNAILS
                         $out .= " <div class='pwaplusphp_thumbnail' style='width:" . $TZ10 . "px; ";
@@ -377,7 +377,7 @@ foreach ($vals as $val) {
 		
 		   $uri = $_SERVER["REQUEST_URI"];
 		   list($uri,$tail) = split($splitchar,$_SERVER['REQUEST_URI']);
-		   $href = $uri . $urlchar . "album=$ALBUM&page=$i";
+		   $href = $uri . $urlchar . "album=$ALBUM&pg=$i";
 		   
 
 		  # Show current page

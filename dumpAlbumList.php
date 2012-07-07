@@ -96,7 +96,7 @@ $file = "http://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER . "?
 #----------------------------------------------------------------------------
 if ($ALBUMS_PER_PAGE != 0) {
 
-	$page = $_GET['page'];
+	$page = $_GET['pg'];
 	if (!(isset($page))) {
 		$page = 1;
 	}
@@ -328,7 +328,7 @@ foreach ($vals as $val) {
 		
 		   $uri = $_SERVER["REQUEST_URI"];
 		   list($uri,$tail) = split($splitchar,$_SERVER['REQUEST_URI']);
-		   $href = $uri . $urlchar . "page=$i";
+		   $href = $uri . $urlchar . "pg=$i";
 
 		  # Show current page
 		  if ($i == $page) {
