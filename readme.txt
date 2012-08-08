@@ -6,7 +6,7 @@ Requires at least: 2.9.1
 Tested up to: 3.4.1
 Stable tag: trunk
 
-The best rated Picasa plugin for Wordpress, PWA+PHP, puts your public and private (unlisted) Picasa albums on your site in your language!
+The best rated Picasa plugin for Wordpress, PWA+PHP, puts your public and private Picasa albums on your site in your language!
 
 == Description ==
 
