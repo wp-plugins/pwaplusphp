@@ -579,7 +579,7 @@ echo "</td><td width='25%' valign=top style='padding-top: 0px;'>";
 
 echo "<table class='widefat' width='100%'>";
 echo "<thead><tr><th valign=top colspan=3>Help & Support</th></tr></thead>\n";
-echo "<tr><td>Support is available <a href='http://code.google.com/p/pwaplusphp/w/list' target='_BLANK'>on the wiki</a> and our <a href='http://groups.google.com/group/pwaplusphp' target='_BLANK'>discussion group</a> is a good place to ask questions. You can also submit and review <a href='http://code.google.com/p/pwaplusphp/issues/entry?template=Defect%20report%20from%20user' target='_BLANK'>Bug Reports</a> and <a href='http://code.google.com/p/pwaplusphp/issues/entry?template=Enhancement%20Request' target='_BLANK'>Enhancement Requests</a> on the <a href='http://code.google.com/p/pwaplusphp/issues/list' target='_BLANK'>Issues Page</a>. For news and updates about issues and new releases, <a href='https://twitter.com/intent/follow?screen_name=pwaplusphp&source=link'>follow PWA+PHP on Twitter</a>.</td></tr>";
+echo "<tr><td>Support is available @ <a href='http://pwaplusphp.smccandl.net/support/' target='_BLANK'>http://pwaplusphp.smccandl.net/support/</a>.</td></tr>";
 echo "<tfoot><tr><th valign=top colspan=3></th></tr></tfoot>\n";
 echo "</table>";
 echo "<br />";
