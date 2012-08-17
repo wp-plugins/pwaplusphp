@@ -576,16 +576,22 @@ if ($loc == "gdata") {
 
 global $THIS_VERSION;
 echo "</td><td width='25%' valign=top style='padding-top: 0px;'>";
-
+?>
+<script type="text/javascript">var URWidgetListener = function (event) {  if (event.data.indexOf("redirect") == 0) {    found = event.data.match(/redirect:url\(([^\)]*)\)/);    if (found.length == 2) {      location.href = found[1];    }  }};if (window.addEventListener) {  window.addEventListener("message", URWidgetListener, false);} else {  window.attachEvent("onmessage", URWidgetListener);} var head  = document.getElementsByTagName("head")[0];var link  = document.createElement("link");link.rel  = "stylesheet";link.type = "text/css";link.href = "http://pwaplusphp.smccandl.net/support/public/themes/default/assets/css/widget.css";link.media = "all";head.appendChild(link);</script><script type="text/javascript">widget = {url:'http://pwaplusphp.smccandl.net/support/'}</script><script src="http://pwaplusphp.smccandl.net/support/public/assets/modules/system/js/widget.js" type="text/javascript"></script>
+<a class="widget-tab widget-tab-right w-round" style="margin-top:-52px;background-color:#67A2B7;border-color:#FFFFFF;" title="Support" href="javascript:popup('widget', 'http://pwaplusphp.smccandl.net/support/widget', 765, 405);"  >
+  <img width="15" alt="" src="http://pwaplusphp.smccandl.net/support/public/files/logo/widget-text-default.png" />
+</a>
+<?php
 echo "<table class='widefat' width='100%'>";
 echo "<thead><tr><th valign=top colspan=3>Help & Support</th></tr></thead>\n";
-echo "<tr><td>Support is available @ <a href='http://pwaplusphp.smccandl.net/support/' target='_BLANK'>http://pwaplusphp.smccandl.net/support/</a>.</td></tr>";
+echo "<tr><td>If you encounter any issues, head to the <strong><a href='http://pwaplusphp.smccandl.net/support/' target='_BLANK'>support site</a></strong> or click the feedback tab on the right side of this page.</td></tr>";
 echo "<tfoot><tr><th valign=top colspan=3></th></tr></tfoot>\n";
 echo "</table>";
 echo "<br />";
 echo "<table class='widefat' width='100%'>";
 echo "<thead><tr><th valign=top colspan=3>News & Announcements</th></tr></thead>\n";
 echo "<tr><td>";
+
 	// Get RSS Feed(s) 
 	include_once(ABSPATH . WPINC . '/feed.php'); 
 	// Get a SimplePie feed object from the specified feed source. 
