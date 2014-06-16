@@ -1,9 +1,10 @@
 <?PHP
-function dumpAlbumList($FILTER,$COVER = "FALSE") {
+function dumpAlbumList($FILTER,$COVER = "FALSE",$overrides_array) {
 
 $USE_LIGHTBOX="TRUE";
 $STANDALONE_MODE="TRUE";
 
+$ALBUMS_TO_HIDE         = ($overrides_array['hide_albums']) ? explode(",",$overrides_array['hide_albums']) : array(); //added due to is_array error
 $GDATA_TOKEN		= get_option("pwaplusphp_gdata_token");
 $PICASAWEB_USER	 	= get_option("pwaplusphp_picasa_username");
 #$IMGMAX		 	= get_option("pwaplusphp_image_size","640");
@@ -194,12 +195,22 @@ foreach ($vals as $val) {
 					$pos = 0; 
 				} else if (($box > 0) && ($SHOW_DROP_BOX == "TRUE")) {	# Added to allow user to control whether
 					$pos = 0;					# drop box appears in gallery list
+				} else if (in_array($title,$ALBUMS_TO_HIDE)) {
+                                        $pos = 1;
 				} else { 
 					$pos = 1; 
 				}
 				if ($FILTER == $picasa_name) { $pos = 0; }
 		} else {
-				$pos = strlen(strpos($title,"_hide"));
+			$box = strlen(strpos($title,"Drop Box"));
+                        $pos = strlen(strpos($title,"_hide"));
+                        if (($box > 0) && ($SHOW_DROP_BOX == "FALSE")) {
+                                $pos = 1;
+                        } else if (in_array($title,$ALBUMS_TO_HIDE)) {
+                                $pos = 1;
+                        } else {
+                                $pos = strlen(strpos($title,"_hide"));
+                        }
 		}
 		
 		if ($pos == 0) {

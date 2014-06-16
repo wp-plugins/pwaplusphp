@@ -3,14 +3,14 @@ Contributors: smccandl
 Donate link: http://pwaplusphp.smccandl.net/
 Tags: picasa, picasa web albums, picasa private, picasa cache, picasa plugin, picasa wordpress
 Requires at least: 2.9.1
-Tested up to: 3.4.1
+Tested up to: 3.9.1
 Stable tag: trunk
 
 The best rated Picasa plugin for Wordpress, PWA+PHP, puts your public and private Picasa albums on your site in your language!
 
 == Description ==
 
-**v0.9.6 Update:** *Bug fixes. See changelog.*
+**v0.9.7 Update:** *By popular demand, free version can now hide albums by name. Bug fixes. Pro version now ships as an addon to Free version. Details in changelog.*
 
 [PWA+PHP](http://pwaplusphp.smccandl.net) is a lightweight solution for displaying your private (unlisted) and public Picasa Albums within Wordpress in your language using Fancybox, Shadowbox or Lightbox. The plugin provides a guided installer that helps you generate your gdata token and set display options for your albums. 
 
@@ -66,6 +66,11 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 6. Overlay display option
 
 == Changelog ==
+= 0.9.7 =
+* New: Hide G+ (or any) albums by name via shortcode, e.g. [pwaplusphp hide_albums="Auto Backup,Another One"]
+* Bug fix: News item titles on settings page
+* Tested up to WP v3.9.1
+
 = 0.9.6 =
 * Bug fix: Issue 145, Fixed caption now shown
 * Bug fix: Issue 170, Fixed pagination to support WP 3.4+

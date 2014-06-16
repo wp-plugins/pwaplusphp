@@ -1,8 +1,17 @@
 <?PHP
+
 global $PRO_VERSION;
 global $THIS_VERSION;
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
-$PRO_VERSION = "FALSE";		# Changing this only affects the installer and won't enable PRO features.
+
+//$pro_functions = dirname(__FILE__).'/proFunctions.php';
+//if (file_exists($pro_functions)) {
+//	echo "FILE $pro_functions";
+//	require_once($pro_functions);
+//}
+
+$PRO_VERSION = isProActive();
+
 echo "<div class='wrap'>";
 echo "<div id='icon-plugins' class='icon32'></div><h2>PWA+PHP Plugin Settings</h2><br />";
 if ($_GET['loc'] == "finish") {
@@ -52,7 +61,7 @@ $GALLERY_THUMBSIZE      = get_option("pwaplusphp_thumbnail_size",160);
 $ALBUM_THUMBSIZE      	= get_option("pwaplusphp_album_thumbsize",160);
 $REQUIRE_FILTER         = get_option("pwaplusphp_require_filter","FALSE");
 $IMAGES_PER_PAGE        = get_option("pwaplusphp_images_per_page",0);
-$ALBUMS_PER_PAGE		= get_option("pwaplusphp_albums_per_page",0);
+$ALBUMS_PER_PAGE	= get_option("pwaplusphp_albums_per_page",0);
 $PUBLIC_ONLY            = get_option("pwaplusphp_public_only","FALSE");
 $SHOW_ALBUM_DETAILS     = get_option("pwaplusphp_album_details","TRUE");
 $CHECK_FOR_UPDATES      = get_option("pwaplusphp_updates","TRUE");
@@ -68,16 +77,23 @@ $DESCRIPTION_LENGTH     = get_option("pwaplusphp_description_length","120");
 $CROP_THUMBNAILS	= get_option("pwaplusphp_crop_thumbs","TRUE");
 $DATE_FORMAT		= get_option("pwaplusphp_date_format","Y-m-d");
 $HIDE_VIDEO             = get_option("pwaplusphp_hide_video","FALSE");
-$CACHE_THUMBNAILS	= get_option("pwaplusphp_cache_thumbs","FALSE");
-$MAIN_PHOTO_PAGE	= get_option("pwaplusphp_main_photo");
-$SHOW_COMMENTS		= get_option("pwaplusphp_show_comments");
+$CACHE_THUMBNAILS       = get_option("pwaplusphp_cache_thumbs","FALSE");
+$MAIN_PHOTO_PAGE        = get_option("pwaplusphp_main_photo");
+$SHOW_COMMENTS          = get_option("pwaplusphp_show_comments");
+$JQ_PAGINATION_STYLE    = get_option("pwaplusphp_jq_pagination","fade");
+$WHICH_JQ               = get_option("pwaplusphp_which_jq","pwaplusphp");
+$ALLOW_SLIDESHOW        = get_option("pwaplusphp_allow_slideshow","TRUE");
+$DESC_ON_ALBUM_PAGE     = get_option("pwaplusphp_albpage_desc","FALSE");
+$SHOW_N_ALBUMS          = get_option("pwaplusphp_show_n_albums",0);
+$IMAGES_ON_FRONT        = get_option("pwaplusphp_images_on_front",0);   // Rob
+$SHOW_BUTTON            = get_option("pwaplusphp_show_button", "FALSE"); // Rob
+$ADD_WIDGET             = get_option("pwaplusphp_add_widget", "TRUE"); // Rob
 
 if ($PRO_VERSION == "FALSE") {
                 $pro_disabled = "disabled";
 		$disabled_color = "color: #CCC;";
-} else {
-		$ACTIVE_LIGHTBOX = getActiveLightbox();
 }
+
 
 	echo "<form name=form1 action='$self?page=pwaplusphp&loc=finish' method='post'>\n";
 	echo "<table class='widefat' cellspacing=5 width=700>\n";
@@ -103,98 +119,263 @@ if ($PRO_VERSION == "FALSE") {
         echo "</select>\n";
         echo "</td><td valign=top style='padding-top: 8px;'><i>Set to TRUE to hide unlisted albums.</i></td></tr>";
 	echo "</table>";
-	# -------
+
+	# ---------------------------------------------------------------------------------
+	# START PRO FEATURES
+	# ---------------------------------------------------------------------------------
 	echo "<br />";
-        echo "<table class='widefat'>";
+	echo "<table class='widefat'>";
+
         echo "<thead><tr><th valign=top colspan=3 style='$disabled_color'>Pro Features";
+
 	if ($PRO_VERSION == "FALSE") echo " - Disabled";
+
 	echo " </th></tr></thead>\n";
+
 	#------------------------
+
 	
-        if ((!is_writable(WP_PLUGIN_DIR . "/pwaplusphp/cache/")) && ($PRO_VERSION == "TRUE")) {
-                echo "<tr><td colspan=3 style='color: #FF0000; font-size: 10px;'>Cache directory is not writable! Try chmod 755 " . WP_PLUGIN_DIR . "/pwaplusphp/cache/" . "</td></tr>";
+
+        if ((!is_writable(PWAPLUSPHP_PATH . "cache/")) && ($PRO_VERSION == "TRUE")) {
+
+                echo "<tr><td colspan=3 style='color: #FF0000; font-size: 10px;'>Cache directory is not writable! Try chmod 755 " . PWAPLUSPHP_PATH . "cache/" . "</td></tr>";
+
         }
+
         echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Cache Thumbnails</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_cache_thumbs' $pro_disabled>";
-        if ($CACHE_THUMBNAILS == "TRUE") {
-                $cache_true = "selected";
-                $cache_false= "";
-        } else {
+
+        if ($CACHE_THUMBNAILS == "FALSE") {
+
                 $cache_true = "";
+
                 $cache_false= "selected";
+
+        } else {
+
+                $cache_true = "selected";
+
+                $cache_false= "";
+
         }
+
         echo "<option value='TRUE' $cache_true>Enable</option>";
+
         echo "<option value='FALSE' $cache_false>Disable</option>";
+
         echo "</select>\n";
+
         echo "</td><td valign=top style='$disabled_color padding-top: 7px;'><i>Cache thumbnails on your server for faster page loads.</i></td></tr>";
+
 	#-----------------------------------
-	if ($ACTIVE_LIGHTBOX == "NONE") { $pro_disabled = "disabled"; }
+
 	echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Comment System</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_show_comments' $pro_disabled>";
-        if ($SHOW_COMMENTS == "TRUE") {
-                $comments_true = "selected";
-                $comments_false= "";
-        } else {
+
+        if ($SHOW_COMMENTS == "FALSE") {
+
                 $comments_true = "";
+
                 $comments_false= "selected";
+
+        } else {
+
+                $comments_true = "selected";
+
+                $comments_false= "";
+
         }
+
         echo "<option value='TRUE' $comments_true>Enable</option>";
+
         echo "<option value='FALSE' $comments_false>Disable</option>";
+
         echo "</select>\n";
-	if ($ACTIVE_LIGHTBOX == "NONE") {
-                echo "</td><td style='color: #FF0000; padding-top: 7px; font-size: 10px;'>Error: Can't find active supported Lightbox.  Check <a href='http://code.google.com/p/pwaplusphp/w/list' target='_BLANK'>the wiki</a> for supported plugins.</td></tr>";
-		$pro_disabled="";
-        } else {
-        	echo "</td><td valign=top style='$disabled_color; padding-top: 8px;'><i>Allow users to comment on photos via API. Requires <a href='http://wordpress.org/extend/plugins/shadowbox-js/'>Shadowbox JS</a> or <a href='http://wordpress.org/extend/plugins/auto-highslide/'>Auto HighSlide</a>.</i></td></tr>";
-	}
-	#------------------------
+
+	echo "</td><td valign=top style='$disabled_color padding-top: 7px;'><i>Allow visitors to comment on your photos via Picasa API. Comments will appear in Picasa Web Albums too.</i></td></tr>";
+
         $args = array('selected' => $MAIN_PHOTO_PAGE, 'show_option_none' => "None");
+
         echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Main Photo Page</strong></td><td valign=top style='padding-top: 7px;'>";
+
         if ($PRO_VERSION == "TRUE") { wp_dropdown_pages($args); }
+
         echo "</td><td valign=top style='$disabled_color padding-top: 7px;'><i>Create a page with [pwaplusphp] and select it. Required for album cover shortcode.</i></td></tr>";
+
         #--------------------------
+
         echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>jQuery Page Transition</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_jq_pagination' $pro_disabled>";;
+
         $available_styles = array("blindX","blindY","blindZ","cover","curtainX","curtainY","fade","fadeZoom","growX","growY","none","scrollUp","scrollDown","scrollLeft","scrollRight","scrollHorz","scrollVert","shuffle","slideX","slideY","toss","turnUp","turnDown","turnLeft","turnRight","uncover","wipe","zoom");
+
         foreach ($available_styles as $style) {
+
                 if ($JQ_PAGINATION_STYLE != $style) {
+
                         echo "<option value='$style'>$style</option>";
+
                 } else {
+
                         echo "<option value='$style' selected>$style</option>";
+
                 }
+
         }
+
         echo "</td><td valign=top style='$disabled_color padding-top: 7px;'><i>Set <a href='http://jquery.malsup.com/cycle/browser.html' target='_BLANK' alt='See Transition Demos' title='See Transition Demos'>page transition style</a>. Use \"none\" to disable.</i></td></tr>";
+
+	//-----------------------------------
+
+        echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Which jQuery?</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_which_jq' $pro_disabled>";
+
+        if ($WHICH_JQ == "wordpress") {
+
+                $jq_true = "";
+
+                $jq_false= "selected";
+
+        } else {
+
+                $jq_true = "selected";
+
+                $jq_false= "";
+
+        }
+
+        echo "<option value='pwaplusphp' $jq_true>PWA+PHP</option>";
+
+        echo "<option value='wordpress' $jq_false>WordPress</option>";
+
+        echo "</select>\n";
+
+        echo "</td><td valign=top style='$disabled_color padding-top: 7px;'><i>PWA+PHP uses its own copy of jQuery.  Switch to the WP version if you notice jQuery issues.</i></td></tr>";
+
+	//-----------------------------------
+
+        echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Album Page Description</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_albpage_desc' $pro_disabled>";
+
+        if ($DESC_ON_ALBUM_PAGE == "TRUE") {
+
+                $apd_true = "selected";
+
+                $apd_false= "";
+
+        } else {
+
+                $apd_true = "";
+
+                $apd_false= "selected";
+
+        }
+
+        echo "<option value='TRUE' $apd_true>Yes</option>";
+
+        echo "<option value='FALSE' $apd_false>No</option>";
+
+        echo "</select>\n";
+
+        echo "</td><td valign=top style='$disabled_color padding-top: 7px;'><i>Decide whether to show the album description below the title on the album page.</i></td></tr>";
+
+	//-----------------------------------
+
+        echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>jQuery Slideshow</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_allow_slideshow' $pro_disabled>";
+
+        if ($ALLOW_SLIDESHOW == "FALSE") {
+
+                $ss_true = "";
+
+                $ss_false= "selected";
+
+        } else {
+
+                $ss_true = "selected";
+
+                $ss_false= "";
+
+        }
+
+        echo "<option value='TRUE' $ss_true>Enable</option>";
+
+        echo "<option value='FALSE' $ss_false>Disable</option>";
+
+        echo "</select>\n";
+
+        echo "</td><td valign=top style='$disabled_color padding-top: 7px;'><i>Choose whether to enable or disable the 'Slideshow' link on album pages.</i></td></tr>";
+
         #-------------------------- Rob - Added images on front option
+
 	echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Blog View Photo Limit</strong></td><td valign=top style='padding-top: 7px;'><input type='text' style='width: 50px;'  name='pwaplusphp_images_on_front' value='$IMAGES_ON_FRONT' $pro_disabled/>";
+
         echo "</td><td valign=top style='padding-top: 8px; $disabled_color'><i>Number of photos displayed per post on the main blog view. Zero means show all.</i></td></tr>";
+
         #-------------------------- /
+
+	echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Albums To Show</strong></td><td valign=top style='padding-top: 7px;'><input type='text' style='width: 50px;'  name='pwaplusphp_show_n_albums' value='$SHOW_N_ALBUMS' $pro_disabled/>";
+
+        echo "</td><td valign=top style='padding-top: 8px; $disabled_color'><i>Number of albums displayed on the album list page. Can't be used with pagination. Zero means show all.</i></td></tr>";
+
 	#-------------------------- Rob - Ability to show/hide PWA buttons in editor
+
         echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Editor Buttons</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_show_button' $pro_disabled>";
-        if ($SHOW_BUTTON == "TRUE") {
-                $show_true = "selected";
-                $show_false= "";
-        } else {
+
+        if ($SHOW_BUTTON == "FALSE") {
+
                 $show_true = "";
+
                 $show_false= "selected";
-        }
-        echo "<option value='TRUE' $show_true>Enable</option>";
-        echo "<option value='FALSE' $show_false>Disable</option>";
-        echo "</select>\n";
-        echo "</td><td valign=top style='padding-top: 8px; $disabled_color'><i>Add text editor buttons to easily add the shortcode to pages and posts.</i></td></tr>";
-        #-------------------------- Rob - Added widget
-	echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Widgets</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_add_widget' $pro_disabled>";;
-        if ($ADD_WIDGET == "TRUE") {
-                $widget_true = "selected";
-                $widget_false= "";
+
         } else {
-                $widget_true = "";
-                $widget_false= "selected";
+
+                $show_true = "selected";
+
+                $show_false= "";
+
         }
-        echo "<option value='TRUE' $widget_true>Enable</option>";
-        echo "<option value='FALSE' $widget_false>Disable</option>";
+
+        echo "<option value='TRUE' $show_true>Enable</option>";
+
+        echo "<option value='FALSE' $show_false>Disable</option>";
+
         echo "</select>\n";
+
+        echo "</td><td valign=top style='padding-top: 8px; $disabled_color'><i>Add text editor buttons to easily add the shortcode to pages and posts.</i></td></tr>";
+
+        #-------------------------- Rob - Added widget
+
+	echo "<tr><td valign=top style='padding-top: 7px; width: 200px; $disabled_color'><strong>Widgets</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_add_widget' $pro_disabled>";;
+
+        if ($ADD_WIDGET == "FALSE") {
+
+                $widget_true = "";
+
+                $widget_false= "selected";
+
+        } else {
+
+                $widget_true = "selected";
+
+                $widget_false= "";
+
+        }
+
+        echo "<option value='TRUE' $widget_true>Enable</option>";
+
+        echo "<option value='FALSE' $widget_false>Disable</option>";
+
+        echo "</select>\n";
+
         echo "</td><td valign=top style='padding-top: 8px; $disabled_color'><i>Add comments and random photos widgets to the appearance menu.</i></td></tr>";
+
         #-------------------------- /
+
 	echo "<tfoot><tr><th valign=top colspan=3></th></tr></tfoot>\n";
+
 	echo "</table>";	
+
         # -------
+
+	# ---------------------------------------------------------------------------------
+	# END PRO FEATURES
+	# ---------------------------------------------------------------------------------
+
 	echo "<br />";
 	echo "<table class='widefat'>";
 	echo "<thead><tr><th valign=top colspan=3>Basic Display Settings</th></tr></thead>\n";
@@ -399,8 +580,15 @@ echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Truncat
 	echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Caption Length Limit</strong></td><td valign=top style='padding-top: 7px;'><input style='width: 50px;' type='text' name='pwaplusphp_caption_length' value='$CAPTION_LENGTH'></td><td valign=top style='padding-top: 8px;'><i>Trim display length of captions to specific number of characters</i></td></tr>";
 	#-----------
 	echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Require Filter</strong></td><td valign=top style='padding-top: 7px;'><select name='pwaplusphp_require_filter'>";
-        echo "<option value='TRUE'>TRUE</option>";
-        echo "<option value='FALSE' selected>FALSE</option>";
+	if ($REQUIRE_FILTER == "FALSE") {
+                $filter_true = "";
+                $filter_false= "selected";
+        } else {
+                $filter_true = "selected";
+                $filter_false= "";
+        }
+        echo "<option value='TRUE' $filter_true>TRUE</option>";
+        echo "<option value='FALSE' $filter_false>FALSE</option>";
         echo "</select>\n";
         echo "</td><td valign=top style='padding-top: 8px;'><i>Is filter required? Most users should select FALSE.</i></td></tr>";
 	#-----------
@@ -505,7 +693,7 @@ function set_gdata_token() {
 
 function set_options() {
 
-	$THIS_VERSION = "0.9.6";
+	$THIS_VERSION = "0.9.7";
 
 	update_option("pwaplusphp_picasa_username", $_POST['pwaplusphp_picasa_username']);
 	update_option("pwaplusphp_image_size",$_POST['pwaplusphp_image_size']);
@@ -531,7 +719,15 @@ function set_options() {
 	update_option("pwaplusphp_cache_thumbs",$_POST['pwaplusphp_cache_thumbs']);
 	update_option("pwaplusphp_main_photo",$_POST['page_id']);
 	update_option("pwaplusphp_show_comments",$_POST['pwaplusphp_show_comments']);
-
+	update_option("pwaplusphp_show_button",$_POST['pwaplusphp_show_button']);
+	update_option("pwaplusphp_allow_slideshow",$_POST['pwaplusphp_allow_slideshow']);
+	update_option("pwaplusphp_albpage_desc",$_POST['pwaplusphp_albpage_desc']);
+	update_option("pwaplusphp_which_jq",$_POST['pwaplusphp_which_jq']);
+	update_option("pwaplusphp_add_widget",$_POST['pwaplusphp_add_widget']);
+	update_option("pwaplusphp_jq_pagination",$_POST['pwaplusphp_jq_pagination']);
+	update_option("pwaplusphp_show_caption",$_POST['pwaplusphp_show_caption']);
+	update_option("pwaplusphp_images_on_front",$_POST['pwaplusphp_images_on_front']);
+	update_option("pwaplusphp_show_n_albums",$_POST['pwaplusphp_show_n_albums']);
 }
 
 #
@@ -615,7 +811,7 @@ echo "<tr><td>";
 				foreach ( $rss_items as $item ) {
 					$title = $item->get_title();
 					$author = substr($title,0,8);
-					$title = substr($title,36);
+					$title = substr($title,85);
 					$title = substr($title,0,-6);	// Removes &quote; from the end
 					$news = substr($title,-6);
 					$title = substr($title,0,-6);
@@ -659,12 +855,18 @@ if ($PRO_VERSION == "TRUE") {
 	echo "<tfoot><tr><th valign=top colspan=3></th></tr></tfoot>\n";
 	echo "</table>";
 	echo "<br />";
+	$pro_path = PWAPLUSPHP_PATH . "/pwaplusphp.php";
+	$plugin_data = get_plugin_data( PWAPLUSPHP_PATH . "pwaplusphp-pro.php");
+    	$plugin_version = $plugin_data['Version'];
 }
 echo "<table class='widefat' width='100%'>";
 echo "<thead><tr><th valign=top colspan=3>Server Information</th></tr></thead>\n";
 echo "<tr><td>";
 echo "<table cellspacing=0 width='100%'>";
-echo "<tr><th>PWA+PHP</th><td>v" . $THIS_VERSION . " $pv</td></tr>";
+echo "<tr><th>PWA+PHP</th><td>v" . $THIS_VERSION . "</td></tr>";
+if ($PRO_VERSION == "TRUE") {
+echo "<tr><th>Pro Add-on</th><td>v" . $plugin_version . "</td></tr>";
+}
 echo "<tr><th>Hostname</th><td>" . $_SERVER['SERVER_NAME'] . "</td></tr>";
 list($ws,$os) = split(' ',$_SERVER['SERVER_SOFTWARE']);
 $curlver = curl_version();
