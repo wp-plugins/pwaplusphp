@@ -33,11 +33,11 @@ $MAIN_PHOTO_PAGE        = get_option("pwaplusphp_main_photo");
 #----------------------------------------------------------------------------
 if ( get_option('permalink_structure') != '' ) { 
 	# permalinks enabled
-	list($back_link,$uri_tail) = split('\?',$uri);
+	list($back_link,$uri_tail) = explode('?',$uri);
 	$urlchar = '?';
         $splitchar = '\?';
 } else {
-	list($back_link,$uri_tail) = split('\&',$uri);
+	list($back_link,$uri_tail) = explode('&',$uri);
 	$urlchar = '&';
         $splitchar = $urlchar;
 }
@@ -219,7 +219,7 @@ foreach ($vals as $val) {
 
 		   if ((($FILTER == "RANDOM") && ($random_album == $album_count)) || ($FILTER != "RANDOM")) {
 
-                        list($disp_name,$tags) = split('_',$title);
+                        list($disp_name,$tags) = explode('_',$title);
 
 			# --------------------------------------------------------------------
 			# Added via issue 7, known problem: long names can break div layout
@@ -230,7 +230,7 @@ foreach ($vals as $val) {
 			$total_images = $total_images + $num;
                         $out .= "<div class='pwaplusphp_albumcover'>\n";
 			$uri = $_SERVER["REQUEST_URI"];
-			list($back_link,$uri_tail) = split('\?',$uri);
+			list($back_link,$uri_tail) = explode('\?',$uri);
                    	if ( get_option('permalink_structure') != '' ) {
                         	# permalinks enabled
 				$permalinks_on = 1;
@@ -244,7 +244,7 @@ foreach ($vals as $val) {
 				$RANDOM_URI = $blog_url . "/?page_id=" . $MAIN_PHOTO_PAGE;
 				$out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href=\"" . $RANDOM_URI . "&album=$picasa_name\"><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
 			} else {
-				list($paged_head,$paged_tail) = split('\?',$_SERVER['REQUEST_URI']);
+				list($paged_head,$paged_tail) = explode('\?',$_SERVER['REQUEST_URI']);
 				if ($permalinks_on) {
                                         $out .= "<a style='width: " . $TWM10 . "px;' class='overlay' href=\"" . $paged_head . $urlchar . "album=$picasa_name\"><img class='pwaplusphp_img' alt='$picasa_name' title='$picasa_name' src=\"$thumb\" />";
                                 } else {
@@ -280,7 +280,7 @@ foreach ($vals as $val) {
                         		$out .= "<a class='album_link' href='" . $RANDOM_URI . $urlchar . "album=$picasa_name'>$disp_name</a>\n";
 				}
 			} else {
-                                list($paged_head,$paged_tail) = split('\?',$_SERVER['REQUEST_URI']);
+                                list($paged_head,$paged_tail) = explode('\?',$_SERVER['REQUEST_URI']);
                                 if ($permalinks_on) {
                                         $out .= "<a class='album_link' href='" . $paged_head . $urlchar . "album=$picasa_name'>$disp_name</a>\n";
                                 } else {
@@ -338,7 +338,7 @@ foreach ($vals as $val) {
 		   $link_image_index=($i - 1) * ($ALBUMS_PER_PAGE + 1);
 		
 		   $uri = $_SERVER["REQUEST_URI"];
-		   list($uri,$tail) = split($splitchar,$_SERVER['REQUEST_URI']);
+		   list($uri,$tail) = explode($splitchar,$_SERVER['REQUEST_URI']);
 		   $href = $uri . $urlchar . "pg=$i";
 
 		  # Show current page
