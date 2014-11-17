@@ -78,11 +78,11 @@ $gphotoid="1234678";
 //----------------------------------------------------------------------------
 if ( get_option('permalink_structure') != '' ) { 
 	// permalinks enabled
-	list($back_link,$uri_tail) = split('\?',$uri);
+	list($back_link,$uri_tail) = explode('?',$uri);
 	$urlchar = '?';
         $splitchar = '\?';
 } else {
-	list($back_link,$uri_tail) = split('\&',$uri);
+	list($back_link,$uri_tail) = explode('&',$uri);
 	$urlchar = '&';
         $splitchar = $urlchar;
 }
@@ -91,7 +91,7 @@ if ( get_option('permalink_structure') != '' ) {
 // Grab album data from URL
 //----------------------------------------------------------------------------
 // Reformat the album title for display
-list($ALBUM_TITLE,$tags) = split('_',$ALBUM);
+list($ALBUM_TITLE,$tags) = explode('_',$ALBUM);
 
 //----------------------------------------------------------------------------
 // Check for required variables from config file
@@ -243,7 +243,7 @@ foreach ($vals as $val) {
 		
 		// Grab the album title once
                 if ($STOP_FLAG != 1) {
-			list($AT,$tags) = split('_',$picasa_title);
+			list($AT,$tags) = explode('_',$picasa_title);
 			$AT = str_replace("\"", "", $AT);
                         $AT = str_replace("'", "",$AT);
 			if (($IN_POST != "TRUE") && ($IN_POST != "SLIDESHOW")) {
@@ -392,7 +392,7 @@ foreach ($vals as $val) {
 		   $link_image_index=($i - 1) * ($IMAGES_PER_PAGE + 1);
 		
 		   $uri = $_SERVER["REQUEST_URI"];
-		   list($uri,$tail) = split($splitchar,$_SERVER['REQUEST_URI']);
+		   list($uri,$tail) = explode($urichar,$_SERVER['REQUEST_URI']);
 		   $href = $uri . $urlchar . "album=$ALBUM&pg=$i";
 		   
 
