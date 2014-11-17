@@ -28,6 +28,12 @@ $DATE_FORMAT		= get_option("pwaplusphp_date_format","Y-m-d");
 $CACHE_THUMBNAILS       = get_option("pwaplusphp_cache_thumbs","FALSE");
 $MAIN_PHOTO_PAGE        = get_option("pwaplusphp_main_photo");
 
+# The overrides
+if ($overrides_array["images_per_page"] != "") { $IMAGES_PER_PAGE = $overrides_array["images_per_page"];}
+if ($overrides_array["image_size"]) { $IMGMAX = $overrides_array["image_size"];}
+if ($overrides_array["thumbnail_size"]) { $GALLERY_THUMBSIZE = $overrides_array["thumbnail_size"];}
+if ($overrides_array["picasaweb_user"]) { $PICASAWEB_USER = $overrides_array["picasaweb_user"];}
+
 #----------------------------------------------------------------------------
 # Check Permalink Structure 
 #----------------------------------------------------------------------------
