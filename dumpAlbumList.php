@@ -338,7 +338,7 @@ foreach ($vals as $val) {
 		   $link_image_index=($i - 1) * ($ALBUMS_PER_PAGE + 1);
 		
 		   $uri = $_SERVER["REQUEST_URI"];
-		   list($uri,$tail) = explode($urichar,$_SERVER['REQUEST_URI']);
+		   list($uri,$tail) = explode($urlchar,$_SERVER['REQUEST_URI']);
 		   $href = $uri . $urlchar . "pg=$i";
 
 		  # Show current page
