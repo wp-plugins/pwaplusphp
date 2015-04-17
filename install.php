@@ -152,7 +152,7 @@ function step_4_set_token() {
         echo "Token retrieved and saved in WordPress configuration database.<br />";
 	$uri = $_SERVER["REQUEST_URI"];
         list($back_link,$uri_tail) = split('&',$uri);
-        echo "Continue to <a href='$back_link'>the final step: Settings</a>...\n";
+        echo "Continue to <a href='$back_link'>the final step: Settings</a>. Don't forget to type in your username!\n";
     } else {
 	echo "<h2>Install Step 4: Failed!</h2>";
 	echo "Got the following response:<br />";
