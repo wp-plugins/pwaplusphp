@@ -3,9 +3,11 @@ function dumpAlbumList($FILTER,$COVER = "FALSE",$overrides_array) {
 
 $USE_LIGHTBOX="TRUE";
 $STANDALONE_MODE="TRUE";
+$now = date("U");
 
 $ALBUMS_TO_HIDE         = ($overrides_array['hide_albums']) ? explode(",",$overrides_array['hide_albums']) : array(); //added due to is_array error
-$GDATA_TOKEN		= get_option("pwaplusphp_gdata_token");
+$GDATA_TOKEN		= get_option("pwaplusphp_oauth_token");
+$TOKEN_EXPIRES		= get_option("pwaplusphp_token_expires");
 $PICASAWEB_USER	 	= get_option("pwaplusphp_picasa_username");
 #$IMGMAX		 	= get_option("pwaplusphp_image_size","640");
 #$GALLERY_THUMBSIZE 	= get_option("pwaplusphp_thumbnail_size",160);
@@ -28,6 +30,15 @@ $DATE_FORMAT		= get_option("pwaplusphp_date_format","Y-m-d");
 $CACHE_THUMBNAILS       = get_option("pwaplusphp_cache_thumbs","FALSE");
 $MAIN_PHOTO_PAGE        = get_option("pwaplusphp_main_photo");
 
+# ---------------------------------------------------------------------------
+# Refresh the oauth2 token if it has expired
+# ---------------------------------------------------------------------------
+if ($now > $TOKEN_EXPIRES) {
+	refreshOAuth2Token(); # do the refresh
+	$GDATA_TOKEN = get_option("pwaplusphp_oauth_token"); # get the token again
+} else {
+	$time_until_expiry = $TOKEN_EXPIRES - $now;
+}
 # The overrides
 if ($overrides_array["images_per_page"] != "") { $IMAGES_PER_PAGE = $overrides_array["images_per_page"];}
 if ($overrides_array["image_size"]) { $IMGMAX = $overrides_array["image_size"];}
@@ -96,7 +107,7 @@ if ($REQUIRE_FILTER != "FALSE") {
 #----------------------------------------------------------------------------
 # Request URL for Album list
 #----------------------------------------------------------------------------
-$file = "http://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER . "?kind=album&thumbsize=" . $ALBUM_THUMBSIZE . "c";
+$file = "https://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER . "?kind=album&thumbsize=" . $ALBUM_THUMBSIZE . "c";
 
 #----------------------------------------------------------------------------
 # Pagination for Album list

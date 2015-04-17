@@ -13,7 +13,8 @@ function showAlbumContents($ALBUM,$IN_POST = null,$TAG,$overrides_array) {
 $USE_LIGHTBOX="TRUE";
 $STANDALONE_MODE="TRUE";
 
-$GDATA_TOKEN            = get_option("pwaplusphp_gdata_token");
+$GDATA_TOKEN            = get_option("pwaplusphp_oauth_token");
+$TOKEN_EXPIRES		= get_option("pwaplusphp_token_exipres");
 $PICASAWEB_USER         = get_option("pwaplusphp_picasa_username");
 $IMGMAX                 = get_option("pwaplusphp_image_size","640");
 $GALLERY_THUMBSIZE      = get_option("pwaplusphp_thumbnail_size",160);
@@ -27,6 +28,15 @@ $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
 $CAPTION_LENGTH         = get_option("pwaplusphp_caption_length","23");
 $CROP_THUMBNAILS	= get_option("pwaplusphp_crop_thumbs","TRUE");
 $HIDE_VIDEO		= get_option("pwaplusphp_hide_video","FALSE");
+
+# ---------------------------------------------------------------------------
+# Refresh the oauth2 token if it has expired
+# ---------------------------------------------------------------------------
+if ($now > $TOKEN_EXPIRES) {
+        echo "Time to refresh...";
+        refreshOAuth2Token(); # do the refresh
+        $GDATA_TOKEN = get_option("pwaplusphp_oauth_token"); # get the token again
+}
 
 if ($overrides_array["images_per_page"] != "") { $IMAGES_PER_PAGE = $overrides_array["images_per_page"];}
 if ($overrides_array["image_size"]) { $IMGMAX = $overrides_array["image_size"];}
@@ -118,7 +128,7 @@ if ($CROP_THUMBNAILS == "TRUE") { $CROP_CHAR = "c"; }
 else { $CROP_CHAR = "u"; }
 
 
-$file = "http://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER;
+$file = "https://picasaweb.google.com/data/feed/api/user/" . $PICASAWEB_USER;
 
 if ($ALBUM != "NULL") { $file .= "/album/" . $ALBUM; }
 
@@ -392,7 +402,7 @@ foreach ($vals as $val) {
 		   $link_image_index=($i - 1) * ($IMAGES_PER_PAGE + 1);
 		
 		   $uri = $_SERVER["REQUEST_URI"];
-		   list($uri,$tail) = explode($urichar,$_SERVER['REQUEST_URI']);
+		   list($uri,$tail) = explode($urlchar,$_SERVER['REQUEST_URI']);
 		   $href = $uri . $urlchar . "album=$ALBUM&pg=$i";
 		   
 

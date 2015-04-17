@@ -35,18 +35,129 @@ echo "<table cellspacing=20><tr><td width='75%' valign=top>";
 # limitations under the License.
 #==============================================================================================
 
-function get_gdata_token() {
+function step_1_create_project() {
 
 	$site = $_SERVER['SERVER_NAME'];
-	$port = ($_SERVER['SERVER_PORT'] != 80) ? ':' . $_SERVER['SERVER_PORT'] : '';
-	$self  = $_SERVER['PHP_SELF'];
-	$loc  = urlencode("http://" . $site . $port . $self . "?page=pwaplusphp&loc=return");
-	$next = "https://www.google.com/accounts/AuthSubRequest?scope=http%3A%2F%2Fpicasaweb.google.com%2Fdata%2F&session=1&secure=0&next=$loc";
-	echo "<h2>Install Step 1: Token Generation</h2>";
-	echo "<p>Generating this Google \"GData\" token is a one-time step that allows PWA+PHP to access to your private (unlisted) Picasa albums. Click the link below to continue if you wish to set up PicasaWeb tokens for site: <strong>$site</strong></p>";
-	echo "<p>If this is correct, <a href='$next'>";
-	echo "Login to your Google Account</a></p>"; 
-	echo "</body>\n</html>";
+        $port = ($_SERVER['SERVER_PORT'] != 80) ? ':' . $_SERVER['SERVER_PORT'] : '';
+        $self  = $_SERVER['PHP_SELF'];
+        $uris  = "http://" . $site . $port . $self . "?page=pwaplusphp";
+	$origins = "http://" . $site . $port;
+	echo "<h2>Install Step 1: Create Project</h2>";
+	echo "<p>As of April 20th, 2015, Google no longer allows access to Picasa Web Albums using AuthSub authentication. Now we must use OAuth2, which requires you to create a project in the Google Developer Console.<p>";
+	echo "<p>To create the project,<ol>";
+	echo "<li>Head to the <a target='_BLANK' href='https://console.developers.google.com/project'>Google Developer Console</a> and click 'Create Project'";
+	echo "<li>Give the project a name (i.e. pwaplusphp) and a project id (i.e. pwaplusphp). Click Create. Wait a few minutes.</li>";
+	echo "<li>After it's done, click 'APIs & Auth' in the left sidebar, the underneath that, click 'Consent screen'.</li>";
+	echo "<li>Select your email address from the dropdown and enter a Product Name, i.e. pwaplusphp. Click 'Save'.</li>";
+	echo "<li>Above 'Consent Screen' in the sidebar, click 'Credentials'.</li>";
+	echo "<li>On the page that comes up, click the 'Create new Client ID' button";
+	echo "<li>For Application Type, select 'Web Application'.</li>";
+	echo "<li>In the Authorized Javascript Origins box, enter: $origins </li>";
+	echo "<li>In the Authorized Redirect URIs box, enter: $uris </li>";
+	echo "<li>Click 'Create Client ID'</li>";
+	echo "<li>Copy the 'Client ID' and 'Client Secret' or leave the window open</li>";
+	echo "<li>Go to <a href='$uris&loc=step_2_project_creds'>Step 2</a>...";
+	echo "</ol></p>";
+
+}
+
+function step_2_project_creds() {
+
+	$site = $_SERVER['SERVER_NAME'];
+        $port = ($_SERVER['SERVER_PORT'] != 80) ? ':' . $_SERVER['SERVER_PORT'] : '';
+        $self  = $_SERVER['PHP_SELF'];
+	$next  = "http://" . $site . $port . $self . "?page=pwaplusphp&loc=start_oauth";
+	echo "<h2>Install Step 2: Project Credentials</h2>";
+	echo "<p>Now we need to enter this info for PWA+PHP to exchange it for an OAuth2 token.</p>";
+	echo "<form id='project_creds' action='$next' method='GET'><table>";
+	echo "<tr><td>Client ID</td><td><input style='width:400px;' name='client_id' id='client_id' /></td></tr>";
+	echo "<tr><td>Client Secret</td><td><input style='width:400px;' name='client_secret' id='client_secret' /></td></tr>";
+	echo "</table>";
+	echo "<input type='hidden' name='loc' value='step_3_start_oauth' />";
+	echo "<input type='hidden' name='page' value='pwaplusphp' />";
+	echo "<input type='submit' value='Go to Step 3' />";
+	echo "</form>";
+
+}
+
+
+function step_3_start_oauth() {
+	$site = $_SERVER['SERVER_NAME'];
+        $port = ($_SERVER['SERVER_PORT'] != 80) ? ':' . $_SERVER['SERVER_PORT'] : '';
+        $self  = $_SERVER['PHP_SELF'];
+	$client_id = $_GET['client_id'];
+	$client_secret = $_GET['client_secret'];
+	update_option("pwaplusphp_client_id",$client_id);          # save the access token
+        update_option("pwaplusphp_client_secret",$client_secret);       # save the refresh token
+        $loc  = "http://" . $site . $port . $self . "?page=pwaplusphp";
+        echo "<h2>Install Step 3: Token Generation</h2>";
+        echo "<p>Generating this Google OAuth2 token is a one-time step that allows PWA+PHP to access to your private (unlisted) Picasa albums.</p>";
+	echo "<p><strong>Verify the info below before clicking 'Request The Token'</strong></p>";
+	echo "<table><tr><td>REDIRECT URIS:</td><td>$loc</td></tr>";
+	echo "<tr><td>CLIENT ID:</td><td>$client_id</td></tr>";
+	echo "<tr><td>CLIENT SECRET:</td><td>$client_secret</td></tr></table>";
+	$loc = urlencode($loc);
+	$next = "https://accounts.google.com/o/oauth2/auth?scope=https://picasaweb.google.com/data/&response_type=code&access_type=offline&redirect_uri=$loc&approval_prompt=force&client_id=$client_id";
+        echo "<p>If this is correct, <a href='$next'>";
+        echo "Request The Token</a>, then click 'Accept' on the page that comes up.</p>";
+        echo "</body>\n</html>";
+}
+
+function step_4_set_token() {
+
+    $site = $_SERVER['SERVER_NAME'];
+    $port = ($_SERVER['SERVER_PORT'] != 80) ? ':' . $_SERVER['SERVER_PORT'] : '';
+    $self  = $_SERVER['PHP_SELF'];
+    $referer  = "http://" . $site . $port . $self . "?page=pwaplusphp";
+
+    # THESE 2 COME FROM DB
+    $clientId = '307853424755-vaj4phe6pl6r74901c13b91ta49vl95m.apps.googleusercontent.com';
+    $clientSecret = 'xsU845rxV0TO6FQPhoh5NWdx'; 
+
+    $now = date("U");
+    
+    $postBody = 'code='.urlencode($_GET['code'])
+              .'&grant_type=authorization_code'
+              .'&redirect_uri='.urlencode($referer)
+              .'&client_id='.urlencode($clientId)
+              .'&client_secret='.urlencode($clientSecret);
+
+    $curl = curl_init();
+    curl_setopt_array( $curl,
+                array( CURLOPT_CUSTOMREQUEST => 'POST'
+                           , CURLOPT_URL => 'https://accounts.google.com/o/oauth2/token'
+                           , CURLOPT_HTTPHEADER => array( 'Content-Type: application/x-www-form-urlencoded'
+                                                         , 'Content-Length: '.strlen($postBody)
+                                                         , 'User-Agent: PWA+PHP/0.1 +http://pwaplusphp.smccandl.net'
+                                                         )
+                           , CURLOPT_POSTFIELDS => $postBody                              
+                           , CURLOPT_REFERER => $referer
+                           , CURLOPT_RETURNTRANSFER => 1 // means output will be a return value from curl_exec() instead of simply echoed
+                           , CURLOPT_TIMEOUT => 12 // max seconds to wait
+                           , CURLOPT_FOLLOWLOCATION => 0 // don't follow any Location headers, use only the CURLOPT_URL, this is for security
+                           , CURLOPT_FAILONERROR => 0 // do not fail verbosely fi the http_code is an error, this is for security
+                           , CURLOPT_SSL_VERIFYPEER => 1 // do verify the SSL of CURLOPT_URL, this is for security
+                           , CURLOPT_VERBOSE => 0 // don't output verbosely to stderr, this is for security
+                ) );
+    $orig_response = curl_exec($curl);
+    $response = json_decode($orig_response, true); // convert returned objects into associative arrays
+    $token_expires = $now + $response['expires_in'];
+    $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
+    if ($response['access_token']) {
+	update_option("pwaplusphp_oauth_token",$response['access_token']);          # save the access token
+        update_option("pwaplusphp_refresh_token",$response['refresh_token']);       # save the refresh token
+        update_option("pwaplusphp_token_expires",$token_expires);                   # save the epoch when the token expires
+	echo "<h2>Install Step 4: Complete!</h2>";
+        echo "Token retrieved and saved in WordPress configuration database.<br />";
+	$uri = $_SERVER["REQUEST_URI"];
+        list($back_link,$uri_tail) = split('&',$uri);
+        echo "Continue to <a href='$back_link'>the final step: Settings</a>...\n";
+    } else {
+	echo "<h2>Install Step 4: Failed!</h2>";
+	echo "Got the following response:<br />";
+	echo $orig_response;
+    }
 
 }
 
@@ -54,7 +165,7 @@ function get_options() {
 global $PRO_VERSION;
 global $THIS_VERSION;
 
-$GDATA_TOKEN		= get_option("pwaplusphp_gdata_token");
+$GDATA_TOKEN		= get_option("pwaplusphp_oauth_token");
 $PICASAWEB_USER         = get_option("pwaplusphp_picasa_username");
 $IMGMAX                 = get_option("pwaplusphp_image_size","640");
 $GALLERY_THUMBSIZE      = get_option("pwaplusphp_thumbnail_size",160);
@@ -100,8 +211,8 @@ if ($PRO_VERSION == "FALSE") {
 	echo "<thead><tr><th valign=top colspan=3>Picasa Access Settings</th></tr></thead>\n";
 	echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Picasaweb User</strong></td><td valign=top style='padding-top: 7px;'><input style='width: 150px;' type='text' name='pwaplusphp_picasa_username' value='$PICASAWEB_USER'></td><td valign=top style='padding-top: 8px;'><i>Enter your Picasa username.</i></td></tr>";
 
-	echo "<tr><td valign=top style='padding-top: 5px; width: 200px;'><strong>GData Token</strong></td><td valign=top style='padding-top: 5px;'>$GDATA_TOKEN</td>";
-	echo "<td valign=top style='padding-top: 5px;'><i>Allows access to unlisted Picasa albums. <a href='options-general.php?page=pwaplusphp&loc=gdata'>Reset Token</a></i></td></tr>";
+	echo "<tr><td valign=top style='padding-top: 5px; width: 200px;'><strong>OAuth2 Token</strong></td><td valign=top style='padding-top: 5px;'>$GDATA_TOKEN</td>";
+	echo "<td valign=top style='padding-top: 5px;'><i>Allows access to unlisted Picasa albums. <a href='options-general.php?page=pwaplusphp&loc=reset'>Reset Token</a></i></td></tr>";
 	echo "<tfoot><tr><th valign=top colspan=3></th></tr></tfoot>\n";
 	#
 # PUBLIC ALBUMS
@@ -641,59 +752,9 @@ echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Truncat
 	echo "</form>\n";
 }
 
-function exchangeToken($single_use_token) {
-
-
-        $ch = curl_init("https://www.google.com/accounts/AuthSubSessionToken");
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FAILONERROR, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Authorization: AuthSub token="' . $single_use_token . '"'
-                ));
-
-        $result = curl_exec($ch);  /* Execute the HTTP command. */
-
-        # See if there has been a curl error
-        if(curl_errno($ch)) {
-
-                echo "<p><strong>Error: Could not generate session token! Exiting...</strong></p>";
-                die ('Curl error: ' . curl_error($ch));
-
-        }
-        curl_close($ch);
-        $splitStr = split("=", $result);
-
-        if (strlen($splitStr[1]) > 14) {
-                return trim($splitStr[1]);
-        } else {
-                echo "<p><strong>Error: Could not generate session token! Exiting...</strong></p>";
-                die('Unexpected value returned to exchangeToken(): ' . $splitStr[1]);
-        }
-
-}
-
-function set_gdata_token() {
-
-	$token = $_GET['token'];
-	$newToken = exchangeToken($token);
-
-	update_option("pwaplusphp_gdata_token",$newToken);
-
-	echo "<h2>Install Step 1: Complete!</h2>";
-	echo "Token retrieved and saved in WordPress configuration database. Value is '$newToken'.<br />";
-
-	$uri = $_SERVER["REQUEST_URI"];
-	list($back_link,$uri_tail) = split('&',$uri);
-
-	echo "Continue to <a href='$back_link'>Step 2</a>...\n";
-
-}
-
 function set_options() {
 
-	$THIS_VERSION = "0.9.7";
+	$THIS_VERSION = "0.9.9";
 
 	update_option("pwaplusphp_picasa_username", $_POST['pwaplusphp_picasa_username']);
 	update_option("pwaplusphp_image_size",$_POST['pwaplusphp_image_size']);
@@ -740,17 +801,32 @@ if  (!(in_array  ('curl', get_loaded_extensions()))) {
 }
 
 
-$GDATA_TOKEN = get_option("pwaplusphp_gdata_token","NULL");
+$OAUTH_TOKEN = get_option("pwaplusphp_oauth_token","NULL");
 
 # Make sure token is set before proceeding.
-if (($GDATA_TOKEN == "NULL") && ($_GET['loc'] != "return")) { $loc = "gdata"; }
-else { $loc = $_GET['loc']; }
+#if (($GDATA_TOKEN == "NULL") && ($_GET['loc'] != "return")) { $loc = "gdata"; }
+#else { $loc = $_GET['loc']; }
 
-if ($loc == "gdata") {
-	get_gdata_token();
-} else if ($loc == "return") {
-	set_gdata_token();
-} else if (($loc != "finish") && ($loc != "gdata")) {
+# Make sure token is set before proceeding.
+#if (($OAUTH_TOKEN == "NULL") && ($_GET['loc'] != "return")) { $loc = "oauth"; }
+#else { $loc = $_GET['loc']; }
+
+$loc = $_GET['loc'];
+
+if (isset($_GET['code'])) {
+        step_4_set_token();
+} else if ($loc == 'step_3_start_oauth') {
+	step_3_start_oauth();
+} else if ($loc == 'step_2_project_creds') {
+        step_2_project_creds();
+} else if (($OAUTH_TOKEN == "NULL") && (!isset($_GET['code'])) ) {
+	step_1_create_project();
+} else if ($loc == 'reset') {
+	delete_option("pwaplusphp_oauth_token");
+	delete_option("pwaplusphp_token_expires");	
+	delete_option("pwaplusphp_refresh_token");
+	step_3_start_oauth();
+} else if ($loc != "finish") {
 	get_options();	
 } else {
         set_options();

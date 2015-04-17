@@ -22,7 +22,8 @@
 $USE_LIGHTBOX="TRUE";
 $STANDALONE_MODE="TRUE";
 
-$GDATA_TOKEN            = get_option("pwaplusphp_gdata_token");
+$GDATA_TOKEN            = get_option("pwaplusphp_oauth_token");
+$TOKEN_EXPIRES		= get_option("pwaplusphp_token_expires");
 $PICASAWEB_USER         = get_option("pwaplusphp_picasa_username");
 $IMGMAX                 = get_option("pwaplusphp_image_size","640");
 $THUMBSIZE              = get_option("pwaplusphp_thumbnail_size",160);
@@ -37,6 +38,15 @@ $THIS_VERSION           = get_option("pwaplusphp_version");
 $SITE_LANGUAGE          = get_option("pwaplusphp_language","en_us");
 $PERMIT_IMG_DOWNLOAD    = get_option("pwaplusphp_permit_download","FALSE");
 $SHOW_FOOTER            = get_option("pwaplusphp_show_footer","FALSE");
+
+# ---------------------------------------------------------------------------
+# Refresh the oauth2 token if it has expired
+# ---------------------------------------------------------------------------
+if ($now > $TOKEN_EXPIRES) {
+        echo "Time to refresh...";
+        refreshOAuth2Token(); # do the refresh
+        $GDATA_TOKEN = get_option("pwaplusphp_oauth_token"); # get the token again
+}
 
 #-----------------------------------------------------------------------------------------
 # Load Language File
@@ -71,7 +81,7 @@ curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 # Display only public albums if PUBLIC_ONLY=TRUE in config.php
 if ($PUBLIC_ONLY == "FALSE") {
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    		'Authorization: AuthSub token="' . $GDATA_TOKEN . '"'
+    		'Authorization: Bearer ' . $GDATA_TOKEN,
   	));
 }
 
@@ -180,7 +190,7 @@ curl_setopt($ch, CURLOPT_URL, $file);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    'Authorization: AuthSub token="' . $GDATA_TOKEN . '"'
+    'Authorization: Bearer "' . $GDATA_TOKEN . '"'
   ));
 $addressData = curl_exec($ch);
 curl_close($ch);
