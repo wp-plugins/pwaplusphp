@@ -37,11 +37,12 @@ echo "<table cellspacing=20><tr><td width='75%' valign=top>";
 
 function step_1_create_project() {
 
+	$site_url = site_url();
+	$settings_url = $site_url . "/wp-admin/options-general.php?page=pwaplusphp";
 	$site = $_SERVER['SERVER_NAME'];
         $port = ($_SERVER['SERVER_PORT'] != 80) ? ':' . $_SERVER['SERVER_PORT'] : '';
         $self  = $_SERVER['PHP_SELF'];
-        $uris  = "http://" . $site . $port . $self . "?page=pwaplusphp";
-	$origins = "http://" . $site . $port;
+        $js_origins = "http://" . $site . $port;
 	echo "<h2>Install Step 1: Create Project</h2>";
 	echo "<p>As of April 20th, 2015, Google no longer allows access to Picasa Web Albums using AuthSub authentication. Now we must use OAuth2, which requires you to create a project in the Google Developer Console.<p>";
 	echo "<p>To create the project,<ol>";
@@ -52,26 +53,27 @@ function step_1_create_project() {
 	echo "<li>Above 'Consent Screen' in the sidebar, click 'Credentials'.</li>";
 	echo "<li>On the page that comes up, click the 'Create new Client ID' button";
 	echo "<li>For Application Type, select 'Web Application'.</li>";
-	echo "<li>In the Authorized Javascript Origins box, enter: $origins </li>";
-	echo "<li>In the Authorized Redirect URIs box, enter: $uris </li>";
+	echo "<li>In the Authorized Javascript Origins box, enter: $js_origins </li>";
+	echo "<li>In the Authorized Redirect URIs box, enter: $settings_url </li>";
 	echo "<li>Click 'Create Client ID'</li>";
 	echo "<li>Copy the 'Client ID' and 'Client Secret' or leave the window open</li>";
-	echo "<li>Go to <a href='$uris&loc=step_2_project_creds'>Step 2</a>...";
+	echo "<li>Go to <a href='$settings_url&loc=step_2_project_creds'>Step 2</a>...";
 	echo "</ol></p>";
 
 }
 
 function step_2_project_creds() {
 
-	$site = $_SERVER['SERVER_NAME'];
-        $port = ($_SERVER['SERVER_PORT'] != 80) ? ':' . $_SERVER['SERVER_PORT'] : '';
-        $self  = $_SERVER['PHP_SELF'];
-	$next  = "http://" . $site . $port . $self . "?page=pwaplusphp&loc=start_oauth";
+	$site_url = site_url();
+        $settings_url = $site_url . "/wp-admin/options-general.php?page=pwaplusphp";
+	$next  = $settings_url . "&loc=start_oauth";
+	$client_id = get_option("pwaplusphp_client_id");
+        $client_secret = get_option("pwaplusphp_client_secret");
 	echo "<h2>Install Step 2: Project Credentials</h2>";
 	echo "<p>Now we need to enter this info for PWA+PHP to exchange it for an OAuth2 token.</p>";
 	echo "<form id='project_creds' action='$next' method='GET'><table>";
-	echo "<tr><td>Client ID</td><td><input style='width:400px;' name='client_id' id='client_id' /></td></tr>";
-	echo "<tr><td>Client Secret</td><td><input style='width:400px;' name='client_secret' id='client_secret' /></td></tr>";
+	echo "<tr><td>Client ID</td><td><input style='width:400px;' name='client_id' id='client_id' value='$client_id'/></td></tr>";
+	echo "<tr><td>Client Secret</td><td><input style='width:400px;' name='client_secret' id='client_secret' value='$client_secret'/></td></tr>";
 	echo "</table>";
 	echo "<input type='hidden' name='loc' value='step_3_start_oauth' />";
 	echo "<input type='hidden' name='page' value='pwaplusphp' />";
@@ -82,22 +84,24 @@ function step_2_project_creds() {
 
 
 function step_3_start_oauth() {
-	$site = $_SERVER['SERVER_NAME'];
-        $port = ($_SERVER['SERVER_PORT'] != 80) ? ':' . $_SERVER['SERVER_PORT'] : '';
-        $self  = $_SERVER['PHP_SELF'];
+	$site_url = site_url();
+        $settings_url = $site_url . "/wp-admin/options-general.php?page=pwaplusphp";
 	$client_id = $_GET['client_id'];
 	$client_secret = $_GET['client_secret'];
+	if ((!isset($client_id)) || (!isset($client_secret))) {
+		$client_id = get_option("pwaplusphp_client_id");
+		$client_secret = get_option("pwaplusphp_client_secret");
+	}
 	update_option("pwaplusphp_client_id",$client_id);          # save the access token
         update_option("pwaplusphp_client_secret",$client_secret);       # save the refresh token
-        $loc  = "http://" . $site . $port . $self . "?page=pwaplusphp";
         echo "<h2>Install Step 3: Token Generation</h2>";
         echo "<p>Generating this Google OAuth2 token is a one-time step that allows PWA+PHP to access to your private (unlisted) Picasa albums.</p>";
 	echo "<p><strong>Verify the info below before clicking 'Request The Token'</strong></p>";
-	echo "<table><tr><td>REDIRECT URIS:</td><td>$loc</td></tr>";
+	echo "<table><tr><td>REDIRECT URIS:</td><td>$settings_url</td></tr>";
 	echo "<tr><td>CLIENT ID:</td><td>$client_id</td></tr>";
 	echo "<tr><td>CLIENT SECRET:</td><td>$client_secret</td></tr></table>";
-	$loc = urlencode($loc);
-	$next = "https://accounts.google.com/o/oauth2/auth?scope=https://picasaweb.google.com/data/&response_type=code&access_type=offline&redirect_uri=$loc&approval_prompt=force&client_id=$client_id";
+	$settings_url = urlencode($settings_url);
+	$next = "https://accounts.google.com/o/oauth2/auth?scope=https://picasaweb.google.com/data/&response_type=code&access_type=offline&redirect_uri=$settings_url&approval_prompt=force&client_id=$client_id";
         echo "<p>If this is correct, <a href='$next'>";
         echo "Request The Token</a>, then click 'Accept' on the page that comes up.</p>";
         echo "</body>\n</html>";
@@ -105,22 +109,20 @@ function step_3_start_oauth() {
 
 function step_4_set_token() {
 
-    $site = $_SERVER['SERVER_NAME'];
-    $port = ($_SERVER['SERVER_PORT'] != 80) ? ':' . $_SERVER['SERVER_PORT'] : '';
-    $self  = $_SERVER['PHP_SELF'];
-    $referer  = "http://" . $site . $port . $self . "?page=pwaplusphp";
+    $site_url = site_url();
+    $settings_url = $site_url . "/wp-admin/options-general.php?page=pwaplusphp";
 
     # THESE 2 COME FROM DB
-    $clientId = '307853424755-vaj4phe6pl6r74901c13b91ta49vl95m.apps.googleusercontent.com';
-    $clientSecret = 'xsU845rxV0TO6FQPhoh5NWdx'; 
+    $client_id = get_option("pwaplusphp_client_id");
+    $client_secret = get_option("pwaplusphp_client_secret");
 
     $now = date("U");
     
     $postBody = 'code='.urlencode($_GET['code'])
               .'&grant_type=authorization_code'
-              .'&redirect_uri='.urlencode($referer)
-              .'&client_id='.urlencode($clientId)
-              .'&client_secret='.urlencode($clientSecret);
+              .'&redirect_uri='.urlencode($settings_url)
+              .'&client_id='.urlencode($client_id)
+              .'&client_secret='.urlencode($client_secret);
 
     $curl = curl_init();
     curl_setopt_array( $curl,
@@ -131,7 +133,7 @@ function step_4_set_token() {
                                                          , 'User-Agent: PWA+PHP/0.1 +http://pwaplusphp.smccandl.net'
                                                          )
                            , CURLOPT_POSTFIELDS => $postBody                              
-                           , CURLOPT_REFERER => $referer
+                           , CURLOPT_REFERER => $settings_url
                            , CURLOPT_RETURNTRANSFER => 1 // means output will be a return value from curl_exec() instead of simply echoed
                            , CURLOPT_TIMEOUT => 12 // max seconds to wait
                            , CURLOPT_FOLLOWLOCATION => 0 // don't follow any Location headers, use only the CURLOPT_URL, this is for security
@@ -152,7 +154,7 @@ function step_4_set_token() {
         echo "Token retrieved and saved in WordPress configuration database.<br />";
 	$uri = $_SERVER["REQUEST_URI"];
         list($back_link,$uri_tail) = split('&',$uri);
-        echo "Continue to <a href='$back_link'>the final step: Settings</a>. Don't forget to type in your username!\n";
+        echo "Continue to <a href='$back_link'>the final step: Settings</a>...\n";
     } else {
 	echo "<h2>Install Step 4: Failed!</h2>";
 	echo "Got the following response:<br />";
@@ -754,7 +756,7 @@ echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Truncat
 
 function set_options() {
 
-	$THIS_VERSION = "0.9.9";
+	$THIS_VERSION = "0.9.7";
 
 	update_option("pwaplusphp_picasa_username", $_POST['pwaplusphp_picasa_username']);
 	update_option("pwaplusphp_image_size",$_POST['pwaplusphp_image_size']);

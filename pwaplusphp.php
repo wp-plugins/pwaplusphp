@@ -43,16 +43,17 @@ function refreshOAuth2Token() {
     curl_close($curl);
     if ($response['access_token']) {
         update_option("pwaplusphp_oauth_token",$response['access_token']);          # save the access token
-        update_option("pwaplusphp_refresh_token",$response['refresh_token']);       # save the refresh token
         update_option("pwaplusphp_token_expires",$token_expires);                   # save the epoch when the token expires
     } else {
-        echo "Got the following response:<br />";
+        echo "refreshOAuth2Token got the following response:<br />";
         echo $orig_response;
+	echo "using refreshToken $refreshToken";
     }
 
 }
 function doCurlExec($file) {
 
+	$DEBUG = 0;
 	$PUBLIC_ONLY = get_option("pwaplusphp_public_only","TRUE");
 	#----------------------------------------------------------------------------
 	# Curl code to store XML data from PWA in a variable
@@ -72,6 +73,7 @@ function doCurlExec($file) {
 	}
 
 	$addressData = curl_exec($ch);
+	if ($DEBUG) { echo $addressData; }
 	curl_close($ch);
 
 	#----------------------------------------------------------------------------
