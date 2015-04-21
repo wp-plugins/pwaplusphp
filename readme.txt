@@ -10,7 +10,7 @@ The best rated Picasa plugin for Wordpress, PWA+PHP, puts your public and privat
 
 == Description ==
 
-**v0.9.9 Re-Auth Required:** *AuthSub (used by PWA+PHP to connect to your Private albums) [is going away.](https://support.google.com/accounts/answer/6140402) This change impacts all users accessing Private albums via PWA+PHP and v0.9.8 [will stop working on April 20th](http://pwaplusphp.smccandl.net/support/responses/why-switch-from-authsub-to-oauth2).*
+**Re-Auth Required:** *AuthSub (used by PWA+PHP to connect to your Private albums) [is going away.](https://support.google.com/accounts/answer/6140402) This change impacts all users accessing Private albums via PWA+PHP and v0.9.8 [will stop working on April 20th](http://pwaplusphp.smccandl.net/support/responses/why-switch-from-authsub-to-oauth2).*
 
 [PWA+PHP](http://pwaplusphp.smccandl.net) is a lightweight solution for displaying your private (unlisted) and public Picasa Albums within Wordpress in your language using Fancybox, Shadowbox or Lightbox. The plugin provides a guided installer that helps you generate your gdata token and set display options for your albums. 
 
@@ -66,6 +66,9 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 6. Overlay display option
 
 == Changelog ==
+= 0.9.10 =
+* Added code to suppress notices from PHP
+
 = 0.9.9 =
 * Replaced AuthSub private album authentication with OAuth2.
 
