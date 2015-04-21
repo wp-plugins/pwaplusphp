@@ -1,4 +1,8 @@
 <?PHP
+
+// Don't show notices
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
+
 function dumpAlbumList($FILTER,$COVER = "FALSE",$overrides_array) {
 
 $USE_LIGHTBOX="TRUE";

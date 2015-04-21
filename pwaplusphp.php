@@ -4,9 +4,12 @@ Plugin Name: 	PWA+PHP Picasa Web Albums for Wordpress
 Plugin URI: 	http://pwaplusphp.smccandl.net/
 Description:	The best rated Picasa plugin for Wordpress, PWA+PHP, allows you to display public and private (unlisted) Picasa albums on your site in your language!
 Author: 	Scott McCandless
-Version:	0.9.9
+Version:	0.9.10
 Author URI: 	http://pwaplusphp.smccandl.net/
 */
+
+// Don't show notices
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 function refreshOAuth2Token() {
 
@@ -47,7 +50,7 @@ function refreshOAuth2Token() {
     } else {
         echo "refreshOAuth2Token got the following response:<br />";
         echo $orig_response;
-	echo "using refreshToken $refreshToken";
+		echo "using refreshToken $refreshToken";
     }
 
 }

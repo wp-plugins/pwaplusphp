@@ -1,5 +1,8 @@
 <?PHP
 
+// Don't show notices
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
+
 // For non-PHP5 users
 if (!function_exists("stripos")) {
    function stripos($str,$needle,$offset=0) {

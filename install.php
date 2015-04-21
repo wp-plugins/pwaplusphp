@@ -756,7 +756,7 @@ echo "<tr><td valign=top style='padding-top: 7px; width: 200px;'><strong>Truncat
 
 function set_options() {
 
-	$THIS_VERSION = "0.9.7";
+	$THIS_VERSION = "0.9.10";
 
 	update_option("pwaplusphp_picasa_username", $_POST['pwaplusphp_picasa_username']);
 	update_option("pwaplusphp_image_size",$_POST['pwaplusphp_image_size']);
