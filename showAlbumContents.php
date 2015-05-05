@@ -17,7 +17,7 @@ $USE_LIGHTBOX="TRUE";
 $STANDALONE_MODE="TRUE";
 
 $GDATA_TOKEN            = get_option("pwaplusphp_oauth_token");
-$TOKEN_EXPIRES		= get_option("pwaplusphp_token_exipres");
+$TOKEN_EXPIRES		= get_option("pwaplusphp_token_expires");
 $PICASAWEB_USER         = get_option("pwaplusphp_picasa_username");
 $IMGMAX                 = get_option("pwaplusphp_image_size","640");
 $GALLERY_THUMBSIZE      = get_option("pwaplusphp_thumbnail_size",160);
