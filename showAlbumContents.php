@@ -15,6 +15,7 @@ function showAlbumContents($ALBUM,$IN_POST = null,$TAG,$overrides_array) {
 
 $USE_LIGHTBOX="TRUE";
 $STANDALONE_MODE="TRUE";
+$now = date("U");
 
 $GDATA_TOKEN            = get_option("pwaplusphp_oauth_token");
 $TOKEN_EXPIRES		= get_option("pwaplusphp_token_expires");
