@@ -33,15 +33,19 @@ $DESCRIPTION_LENGTH     = get_option("pwaplusphp_description_length","120");
 $DATE_FORMAT		= get_option("pwaplusphp_date_format","Y-m-d");
 $CACHE_THUMBNAILS       = get_option("pwaplusphp_cache_thumbs","FALSE");
 $MAIN_PHOTO_PAGE        = get_option("pwaplusphp_main_photo");
+$DEBUG = 0;
 
 # ---------------------------------------------------------------------------
 # Refresh the oauth2 token if it has expired
 # ---------------------------------------------------------------------------
+if ($DEBUG) { echo "<p>DEBUG: Now is $now, token expires at $TOKEN_EXPIRES</p>"; }
 if ($now > $TOKEN_EXPIRES) {
+	if ($DEBUG) { echo "<p>DEBUG: [dumpAlbumContents] Token is expired, calling function to refresh it</p>"; }
 	refreshOAuth2Token(); # do the refresh
 	$GDATA_TOKEN = get_option("pwaplusphp_oauth_token"); # get the token again
 } else {
 	$time_until_expiry = $TOKEN_EXPIRES - $now;
+	if ($DEBUG) { echo "<p>DEBUG: [dumpAlbumContents] Token is still valid for another $time_until_expiry secs</p>"; }
 }
 # The overrides
 if ($overrides_array["images_per_page"] != "") { $IMAGES_PER_PAGE = $overrides_array["images_per_page"];}

@@ -12,7 +12,7 @@ Author URI: 	http://pwaplusphp.smccandl.net/
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 function refreshOAuth2Token() {
-	$DEBUG = 1;
+	$DEBUG = 0;
     $now = date("U");
     $clientId = get_option("pwaplusphp_client_id");
     $clientSecret = get_option("pwaplusphp_client_secret");
