@@ -39,7 +39,7 @@ $DEBUG = 0;
 # Refresh the oauth2 token if it has expired
 # ---------------------------------------------------------------------------
 if ($DEBUG) { echo "<p>DEBUG: Now is $now, token expires at $TOKEN_EXPIRES</p>"; }
-if ($now > $TOKEN_EXPIRES) {
+if (($now > $TOKEN_EXPIRES) && ($PUBLIC_ONLY == 'FALSE')) {
 	if ($DEBUG) { echo "<p>DEBUG: [dumpAlbumContents] Token is expired, calling function to refresh it</p>"; }
 	refreshOAuth2Token(); # do the refresh
 	$GDATA_TOKEN = get_option("pwaplusphp_oauth_token"); # get the token again

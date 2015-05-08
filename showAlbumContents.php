@@ -36,7 +36,7 @@ $HIDE_VIDEO		= get_option("pwaplusphp_hide_video","FALSE");
 # ---------------------------------------------------------------------------
 # Refresh the oauth2 token if it has expired
 # ---------------------------------------------------------------------------
-if ($now > $TOKEN_EXPIRES) {
+if (($now > $TOKEN_EXPIRES) && ($PUBLIC_ONLY == 'FALSE')) {
         #echo "Time to refresh...";
         refreshOAuth2Token(); # do the refresh
         $GDATA_TOKEN = get_option("pwaplusphp_oauth_token"); # get the token again

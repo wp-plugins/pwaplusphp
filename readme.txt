@@ -66,6 +66,9 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 6. Overlay display option
 
 == Changelog ==
+= 0.9.13 =
+* Check if public only is false before calling oauth2 token refresh
+
 = 0.9.12 =
 * Disabled debug mode
 
