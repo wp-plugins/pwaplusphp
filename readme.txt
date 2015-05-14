@@ -3,7 +3,7 @@ Contributors: smccandl
 Donate link: http://pwaplusphp.smccandl.net/
 Tags: picasa, picasa web albums, picasa private, picasa cache, picasa plugin, picasa wordpress
 Requires at least: 2.9.1
-Tested up to: 4.1.1
+Tested up to: 4.2.2
 Stable tag: trunk
 
 The best rated Picasa plugin for Wordpress, PWA+PHP, puts your public and private Picasa albums on your site in your language!
@@ -66,6 +66,9 @@ The CSS file that ships with PWA+PHP assumes an album thumbnail of 160px.  If yo
 6. Overlay display option
 
 == Changelog ==
+= 0.9.14 = 
+* Fixed re-auth bug introduced in 0.9.13
+
 = 0.9.13 =
 * Check if public only is false before calling oauth2 token refresh
 

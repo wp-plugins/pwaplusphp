@@ -32,6 +32,7 @@ $SHOW_IMG_CAPTION	= get_option("pwaplusphp_show_caption","HOVER");
 $CAPTION_LENGTH         = get_option("pwaplusphp_caption_length","23");
 $CROP_THUMBNAILS	= get_option("pwaplusphp_crop_thumbs","TRUE");
 $HIDE_VIDEO		= get_option("pwaplusphp_hide_video","FALSE");
+$PUBLIC_ONLY            = get_option("pwaplusphp_public_only","TRUE");
 
 # ---------------------------------------------------------------------------
 # Refresh the oauth2 token if it has expired
